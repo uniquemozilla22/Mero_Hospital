@@ -1,13 +1,14 @@
 import React from "react";
 import { Text } from "react-native";
+import Chat from "../components/Chat/Chat";
 import Layout from "./Layout";
 
-const LoginScreen = () => {
+const IntroScreen = () => {
   return (
     <Layout>
-      <Text>This is the Login Screen</Text>
+      <Chat />
     </Layout>
   );
 };
 
-export default LoginScreen;
+export default IntroScreen;

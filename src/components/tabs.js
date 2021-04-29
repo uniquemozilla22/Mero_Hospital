@@ -1,48 +1,48 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/HomeScreen.js";
-import IntroScreen from "../screens/IntroScreen.js";
+import IntroScreen from "../screens/ChatScreen.js";
 import COLORS from "../assets/colors/colors";
-import IMAGES from "../assets/image/images";
+import LoginScreen from "../screens/LoginScreen.js";
+import Icons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const Tab = createBottomTabNavigator();
 
 const tabs = () => {
   return (
     <Tab.Navigator
-      initialRouteName="Home"
-      tabBarOptions={{ activeTintColor: COLORS.green }}
+      initialRouteName="Homes"
+      tabBarOptions={{ activeTintColor: COLORS.red, showLabel: false }}
     >
       <Tab.Screen
-        name={"Home"}
+        name={"Homes"}
         component={HomeScreen}
         options={{
-          tabBarLabel: "Home",
-          tabBarIcon: ({ color, size }) => (
-            <Image source={IMAGES.home} style={styles.navigationImage} />
+          tabBarIcon: ({ color = COLORS.red, size }) => (
+            <Icons name="home-outline" color={color} size={size} />
           ),
         }}
       />
       <Tab.Screen
-        name={"Intro"}
+        name={"Chat"}
         component={IntroScreen}
         options={{
-          tabBarLabel: "Intro",
           tabBarIcon: ({ color, size }) => (
-            <Image source={IMAGES.home} style={styles.navigationImage} />
+            <Icons name="message-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name={"Login"}
+        component={LoginScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Icons name="login" color={color} size={size} />
           ),
         }}
       />
     </Tab.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  navigationImage: {
-    width: 25,
-    height: 25,
-  },
-});
 
 export default tabs;

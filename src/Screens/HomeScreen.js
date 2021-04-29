@@ -1,10 +1,14 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { Text } from "react-native";
+import Home from "../components/Home/Home.js";
+import Layout from "./Layout.js";
 
-export default function HomeScreen() {
+const HomeScreen = () => {
   return (
-    <View>
-      <Text>This is the Home Screen</Text>
-    </View>
+    <Layout>
+      <Home />
+    </Layout>
   );
-}
+};
+
+export default HomeScreen;
