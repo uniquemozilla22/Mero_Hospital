@@ -3,7 +3,7 @@ import { Card } from "galio-framework";
 import { StyleSheet, View, Text } from "react-native";
 import colors from "../../assets/colors/colors";
 
-const HeadingCard = ({ source, title, context }) => {
+const HeadingCard = ({ source, title }) => {
   return (
     <>
       <Card

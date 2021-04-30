@@ -2,11 +2,13 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import colors from "../../assets/colors/colors";
 
-const Greet = ({ user }) => {
+const Greet = ({ topic }) => {
+  const topic_array = topic.split(" ");
   return (
     <View style={styles.greetingUser}>
       <Text style={styles.heading}>
-        Welcome, <Text style={styles.redColor}>{user} </Text>
+        {topic_array[0] + " "}
+        <Text style={styles.redColor}>{topic_array[1]} </Text>
       </Text>
     </View>
   );
@@ -14,14 +16,14 @@ const Greet = ({ user }) => {
 
 const styles = StyleSheet.create({
   greetingUser: {
-    marginVertical: 10,
+    marginVertical: 25,
   },
   redColor: {
     color: colors.green,
     fontWeight: "bold",
   },
   heading: {
-    fontSize: 20,
+    fontSize: 26,
   },
 });
 

@@ -1,14 +1,16 @@
 import React from "react";
-import { Text } from "react-native";
-import Chat from "../components/Chat/Chat";
-import Layout from "./Layout";
+import ChatCategory from "../components/Chat/ChatCategory";
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
 
-const IntroScreen = () => {
+const Stack = createStackNavigator();
+
+const ChatScreen = () => {
   return (
-    <Layout>
-      <Chat />
-    </Layout>
+    <Stack.Navigator initialRouteName="chat" headerMode={"none"}>
+      <Stack.Screen name="chat" component={ChatCategory} />
+    </Stack.Navigator>
   );
 };
 
-export default IntroScreen;
+export default ChatScreen;
