@@ -5,6 +5,7 @@ import IntroScreen from "../screens/ChatScreen.js";
 import COLORS from "../assets/colors/colors";
 import LoginScreen from "../screens/LoginScreen.js";
 import Icons from "react-native-vector-icons/MaterialCommunityIcons";
+import StoreScreen from "../screens/StoreScreen.js";
 
 const Tab = createBottomTabNavigator();
 
@@ -29,6 +30,15 @@ const tabs = () => {
         options={{
           tabBarIcon: ({ color, size }) => (
             <Icons name="message-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name={"shop"}
+        component={StoreScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Icons name="store-outline" color={color} size={size} />
           ),
         }}
       />

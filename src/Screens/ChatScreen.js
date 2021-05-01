@@ -1,7 +1,7 @@
 import React from "react";
-import ChatCategory from "../components/Chat/ChatCategory";
+import ChatCategory from "../components/Chat/ChatCategory.js";
 import { createStackNavigator } from "@react-navigation/stack";
-import { NavigationContainer } from "@react-navigation/native";
+import HomeScreen from "./HomeScreen";
 
 const Stack = createStackNavigator();
 
