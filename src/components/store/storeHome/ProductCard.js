@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import colors from "../../assets/colors/colors";
+import colors from "../../../assets/colors/colors";
 import { useNavigation } from "@react-navigation/native";
 import { Button, Card, Title, Paragraph } from "react-native-paper";
 
@@ -11,9 +11,13 @@ const ProductCard = ({ source, title, price = 99 }) => {
   const prices_display = (
     <Paragraph style={styles.price}>{"$ " + price}</Paragraph>
   );
+  const navigation = useNavigation();
   return (
     <>
-      <Card style={styles.card}>
+      <Card
+        style={styles.card}
+        onPress={() => navigation.navigate("singleProduct")}
+      >
         <Card.Cover source={{ uri: source }} style={styles.cover} />
         <Card.Title
           style={styles.title}

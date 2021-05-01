@@ -1,16 +1,23 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import colors from "../../assets/colors/colors";
+import { Text, StyleSheet, TouchableOpacity } from "react-native";
+import colors from "../../../assets/colors/colors";
+import { useNavigation } from "@react-navigation/native";
 
 const StoreHeading = ({ topic }) => {
   const topic_array = topic.split(" ");
+
+  const navigation = useNavigation();
+
   return (
-    <View style={styles.greetingUser}>
+    <TouchableOpacity
+      style={styles.greetingUser}
+      onPress={() => navigation.goBack()}
+    >
       <Text style={styles.heading}>
         {topic_array[0] + " "}
         <Text style={styles.redColor}>{topic_array[1]} </Text>
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -19,7 +26,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   redColor: {
-    color: colors.green,
+    color: colors.red,
     fontWeight: "bold",
   },
   heading: {
