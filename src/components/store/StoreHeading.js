@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import colors from "../../assets/colors/colors";
-import { Input } from "galio-framework";
 
 const StoreHeading = ({ topic }) => {
   const topic_array = topic.split(" ");
@@ -17,14 +16,14 @@ const StoreHeading = ({ topic }) => {
 
 const styles = StyleSheet.create({
   greetingUser: {
-    marginVertical: 25,
+    marginVertical: 10,
   },
   redColor: {
     color: colors.green,
     fontWeight: "bold",
   },
   heading: {
-    fontSize: 26,
+    fontSize: 20,
   },
 });
 

@@ -1,4 +1,6 @@
 import React from "react";
+import colors from "../../assets/colors/colors";
+import { Input } from "galio-framework";
 
 const StoreSearch = () => {
   return (

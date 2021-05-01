@@ -16,14 +16,14 @@ const Greet = ({ topic }) => {
 
 const styles = StyleSheet.create({
   greetingUser: {
-    marginVertical: 25,
+    marginVertical: 10,
   },
   redColor: {
     color: colors.green,
     fontWeight: "bold",
   },
   heading: {
-    fontSize: 26,
+    fontSize: 20,
   },
 });
 
