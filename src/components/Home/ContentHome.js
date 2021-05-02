@@ -13,12 +13,14 @@ const ContentHome = ({ Messages }) => {
         />
         <View style={styles.half_space}>
           <HeadingCard
+            path="Chat"
             title={Messages[1]}
             source={
               "https://i.pinimg.com/736x/7f/77/5f/7f775f965134ccf28f451526df3f8e1e.jpg"
             }
           />
           <HeadingCard
+            path="shop"
             title={Messages[2]}
             source={
               "https://img.graphicsurf.com/2020/09/people-in-pharmacy-vector-illustration.jpg"
@@ -26,6 +28,7 @@ const ContentHome = ({ Messages }) => {
           />
         </View>
         <HeadingCard
+          path=""
           title={Messages[3]}
           source={
             "https://img.freepik.com/free-vector/events-concept-illustration_114360-931.jpg?size=626&ext=jpg&ga=GA1.2.1449299337.1618790400"
