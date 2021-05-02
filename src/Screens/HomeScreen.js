@@ -5,7 +5,7 @@ import Layout from "./Layout.js";
 
 const HomeScreen = () => {
   return (
-    <Layout>
+    <Layout cart={false}>
       <Home />
     </Layout>
   );

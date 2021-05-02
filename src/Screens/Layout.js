@@ -6,16 +6,20 @@ import { useNavigation } from "@react-navigation/native";
 
 const Layout = (props) => {
   const navigation = useNavigation();
+
+  const fab_button = props.cart ? (
+    <FAB
+      style={styles.fab}
+      medium
+      icon="cart-outline"
+      onPress={() => navigation.navigate("cart")}
+      animated={true}
+    />
+  ) : null;
   return (
     <>
       <ScrollView style={styles.ViewingIndex}>{props.children}</ScrollView>
-      <FAB
-        style={styles.fab}
-        medium
-        icon="cart-outline"
-        onPress={() => navigation.navigate("cart")}
-        animated={true}
-      />
+      {fab_button}
     </>
   );
 };

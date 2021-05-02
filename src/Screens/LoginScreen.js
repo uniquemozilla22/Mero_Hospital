@@ -4,7 +4,7 @@ import Layout from "./Layout";
 
 const LoginScreen = () => {
   return (
-    <Layout>
+    <Layout cart={false}>
       <Text>This is the Login Screen</Text>
     </Layout>
   );

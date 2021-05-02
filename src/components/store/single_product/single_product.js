@@ -16,7 +16,7 @@ export default () => {
   const navigation = useNavigation();
 
   return (
-    <Layout>
+    <Layout cart={false}>
       <ProductHeading topic={" X"} />
       <View style={styles.container}>
         <ScrollView>

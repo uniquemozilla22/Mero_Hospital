@@ -6,7 +6,7 @@ import ChatHeading from "./ChatHeading.js";
 
 const ChatCategory = () => {
   return (
-    <Layout>
+    <Layout cart={false}>
       <ChatHeading topic="Chat Category" />
       <View style={styles.half_spaces}>
         <Card
