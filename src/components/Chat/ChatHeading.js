@@ -7,8 +7,10 @@ const Greet = ({ topic }) => {
   return (
     <View style={styles.greetingUser}>
       <Text style={styles.heading}>
-        {topic_array[0] + " "}
-        <Text style={styles.redColor}>{topic_array[1]} </Text>
+        {topic_array[0] + " " + topic_array[1] + " "}
+        <Text style={styles.redColor}>
+          {topic_array[topic_array.length - 1]}{" "}
+        </Text>
       </Text>
     </View>
   );
@@ -16,7 +18,8 @@ const Greet = ({ topic }) => {
 
 const styles = StyleSheet.create({
   greetingUser: {
-    marginVertical: 10,
+    margin: 10,
+    marginTop: 20,
   },
   redColor: {
     color: colors.green,

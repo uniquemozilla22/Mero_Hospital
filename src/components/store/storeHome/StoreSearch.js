@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import colors from "../../../assets/colors/colors";
 import { Input } from "galio-framework";
 import { StyleSheet } from "react-native";
@@ -10,7 +10,7 @@ const StoreSearch = ({ tags, onClick, onInput, onSubmit, defaultvalue }) => {
         value={defaultvalue}
         placeholder="Search"
         right
-        icon="find"
+        icon=""
         family="antdesign"
         iconSize={20}
         iconColor={colors.green}
@@ -22,11 +22,5 @@ const StoreSearch = ({ tags, onClick, onInput, onSubmit, defaultvalue }) => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  chip: {
-    marginHorizontal: 5,
-  },
-});
 
 export default StoreSearch;

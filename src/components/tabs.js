@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/HomeScreen.js";
 import IntroScreen from "../screens/ChatScreen.js";
 import COLORS from "../assets/colors/colors";
-import LoginScreen from "../screens/LoginScreen.js";
+import ProfileScreen from "../screens/ProfileScreen";
 import Icons from "react-native-vector-icons/MaterialCommunityIcons";
 import StoreScreen from "../screens/StoreScreen.js";
 
@@ -43,11 +43,11 @@ const tabs = () => {
         }}
       />
       <Tab.Screen
-        name={"Login"}
-        component={LoginScreen}
+        name={"Profile"}
+        component={ProfileScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Icons name="login" color={color} size={size} />
+            <Icons name="user" color={color} size={size} />
           ),
         }}
       />
