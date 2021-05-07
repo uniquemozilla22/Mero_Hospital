@@ -47,7 +47,7 @@ const tabs = () => {
         component={ProfileScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Icons name="user" color={color} size={size} />
+            <Icons name="account-outline" color={color} size={size} />
           ),
         }}
       />

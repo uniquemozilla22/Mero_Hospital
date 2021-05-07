@@ -32,7 +32,7 @@ const ChatCategory = () => {
           options={{
             tabBarLabel: "Create a Chat",
             tabBarIcon: ({ color, size }) => (
-              <Icons name="chat-outline" color={color} size={25} />
+              <Icons name="chat-plus" color={color} size={25} />
             ),
           }}
         />
