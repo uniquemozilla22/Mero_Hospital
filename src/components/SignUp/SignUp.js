@@ -16,7 +16,7 @@ import Feather from "react-native-vector-icons/Feather";
 import colors from "../../assets/colors/colors";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-const SignInScreen = ({ navigation }) => {
+const SignUpScreen = ({ navigation }) => {
   const [data, setData] = React.useState({
     username: "",
     password: "",
@@ -38,10 +38,10 @@ const SignInScreen = ({ navigation }) => {
 
   return (
     <>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <StatusBar backgroundColor={colors.green} barStyle="light-content" />
         <View style={styles.header}>
-          <Text style={styles.text_header}>Welcome Back!</Text>
+          <Text style={styles.text_header}>Welcome !</Text>
         </View>
         <Animatable.View
           animation="fadeInUpBig"
@@ -64,7 +64,7 @@ const SignInScreen = ({ navigation }) => {
             Username
           </Text>
           <View style={styles.action}>
-            <FontAwesome name="user-o" color={colors.black} size={20} />
+            <FontAwesome name="user-o" color={colors.green} size={20} />
             <TextInput
               placeholder="Your Username"
               style={[
@@ -79,7 +79,7 @@ const SignInScreen = ({ navigation }) => {
             />
             {data.check_textInputChange ? (
               <Animatable.View animation="bounceIn">
-                <Feather name="check-circle" color="green" size={20} />
+                <Feather name="check-circle" color={colors.green} size={20} />
               </Animatable.View>
             ) : null}
           </View>
@@ -104,7 +104,49 @@ const SignInScreen = ({ navigation }) => {
             Password
           </Text>
           <View style={styles.action}>
-            <Feather name="lock" color={colors.black} size={20} />
+            <Feather name="lock" color={colors.green} size={20} />
+            <TextInput
+              placeholder="Your Password"
+              placeholderTextColor={colors.grey}
+              secureTextEntry={data.secureTextEntry ? true : false}
+              style={[
+                styles.textInput,
+                {
+                  color: colors.black,
+                },
+              ]}
+              autoCapitalize="none"
+              onChangeText={(val) => handlePasswordChange(val)}
+            />
+            <TouchableOpacity onPress={updateSecureTextEntry}>
+              {data.secureTextEntry ? (
+                <Feather name="eye-off" color={colors.grey} size={20} />
+              ) : (
+                <Feather name="eye" color={colors.grey} size={20} />
+              )}
+            </TouchableOpacity>
+          </View>
+          {data.isValidPassword ? null : (
+            <Animatable.View animation="fadeInLeft" duration={500}>
+              <Text style={styles.errorMsg}>
+                Password must be 8 characters long.
+              </Text>
+            </Animatable.View>
+          )}
+          <Text
+            style={[
+              styles.text_footer,
+              {
+                color: colors.black,
+                marginTop: 15,
+                fontWeight: "bold",
+              },
+            ]}
+          >
+            Confirm Password
+          </Text>
+          <View style={styles.action}>
+            <Feather name="lock" color={colors.green} size={20} />
             <TextInput
               placeholder="Your Password"
               placeholderTextColor={colors.grey}
@@ -134,11 +176,44 @@ const SignInScreen = ({ navigation }) => {
             </Animatable.View>
           )}
 
-          <TouchableOpacity>
-            <Text style={{ color: colors.grey, marginVertical: 15 }}>
-              Forgot password?
-            </Text>
-          </TouchableOpacity>
+          <Text
+            style={[
+              styles.text_footer,
+              {
+                color: colors.black,
+                fontWeight: "bold",
+              },
+            ]}
+          >
+            Email
+          </Text>
+          <View style={styles.action}>
+            <FontAwesome icon={"messages"} color={colors.green} size={20} />
+            <TextInput
+              type="email"
+              placeholder="Your Email"
+              style={[
+                styles.textInput,
+                {
+                  color: colors.black,
+                },
+              ]}
+              autoCapitalize="none"
+              onChangeText={(val) => textInputChange(val)}
+              onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
+            />
+            {data.check_textInputChange ? (
+              <Animatable.View animation="bounceIn">
+                <Feather name="check-circle" color="green" size={20} />
+              </Animatable.View>
+            ) : null}
+          </View>
+          {data.isValidUser ? null : (
+            <Animatable.View animation="fadeInLeft" duration={500}>
+              <Text style={styles.errorMsg}>Email Wrong</Text>
+            </Animatable.View>
+          )}
+
           <View style={styles.button}>
             <TouchableOpacity
               style={[
@@ -148,8 +223,7 @@ const SignInScreen = ({ navigation }) => {
                 },
               ]}
               onPress={() => {
-                // loginHandle(data.username, data.password);
-                navigation.navigate("application");
+                loginHandle(data.username, data.password);
               }}
             >
               <Text
@@ -160,7 +234,7 @@ const SignInScreen = ({ navigation }) => {
                   },
                 ]}
               >
-                Sign In
+                Sign Up
               </Text>
             </TouchableOpacity>
 
@@ -187,7 +261,7 @@ const SignInScreen = ({ navigation }) => {
                   },
                 ]}
               >
-                Sign Up
+                Sign In
               </Text>
             </TouchableOpacity>
 
@@ -246,12 +320,12 @@ const SignInScreen = ({ navigation }) => {
             </ScrollView>
           </View>
         </Animatable.View>
-      </View>
+      </ScrollView>
     </>
   );
 };
 
-export default SignInScreen;
+export default SignUpScreen;
 
 const styles = StyleSheet.create({
   container: {
