@@ -16,7 +16,7 @@ import Feather from "react-native-vector-icons/Feather";
 import colors from "../../assets/colors/colors";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-const SignInScreen = ({ navigation }) => {
+const SignInScreen = ({ navigation, route }) => {
   const [data, setData] = React.useState({
     username: "",
     password: "",
@@ -24,13 +24,31 @@ const SignInScreen = ({ navigation }) => {
     secureTextEntry: true,
     isValidUser: true,
     isValidPassword: true,
+    errorMessagePw:null,
+    routeMessage:null,
+    registerMessage:"register",
   });
 
-  const textInputChange = (val) => {};
 
-  const handlePasswordChange = (val) => {};
+  const textInputChange = (val) => {
+    setData({...data,username:val})
+  };
 
-  const updateSecureTextEntry = () => {};
+  const handlePasswordChange = (val) => {
+    const hasNumber = /\d/.test(val)?true : false
+    const hasSixCharacters = val.length>=6?true : false
+    if(hasNumber && hasSixCharacters)
+    {
+      setData({...data,isValidPassword:true,password:val})
+    }
+    else{
+      setData({...data,isValidPassword:false,errorMessagePw:"Password must have at least 6 letters including numbers"})
+    } 
+  };
+
+  const updateSecureTextEntry = () => {
+    setData({...data,secureTextEntry:!data.secureTextEntry})
+  };
 
   const handleValidUser = (val) => {};
 
@@ -42,6 +60,7 @@ const SignInScreen = ({ navigation }) => {
         <StatusBar backgroundColor={colors.green} barStyle="light-content" />
         <View style={styles.header}>
           <Text style={styles.text_header}>Welcome Back!</Text>
+          {route.params===undefined?null:<Text style={styles.text_header_message}>{route.params.registerMessage}</Text>}
         </View>
         <Animatable.View
           animation="fadeInUpBig"
@@ -70,7 +89,7 @@ const SignInScreen = ({ navigation }) => {
               style={[
                 styles.textInput,
                 {
-                  color: colors.white,
+                  color: colors.black,
                 },
               ]}
               autoCapitalize="none"
@@ -128,9 +147,9 @@ const SignInScreen = ({ navigation }) => {
           </View>
           {data.isValidPassword ? null : (
             <Animatable.View animation="fadeInLeft" duration={500}>
-              <Text style={styles.errorMsg}>
-                Password must be 8 characters long.
-              </Text>
+              {data.errorMessagePw!==null?(<Text style={styles.errorMsg}>
+                {data.errorMessagePw}
+              </Text>):null}
             </Animatable.View>
           )}
 
@@ -166,7 +185,7 @@ const SignInScreen = ({ navigation }) => {
 
             <TouchableOpacity
               onPress={() => {
-                console.log("pressed");
+                navigation.navigate("signup")
               }}
               style={[
                 styles.signIn,
@@ -276,6 +295,10 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: 30,
+  },
+  text_header_message:{
+    color: "#fff",
+    fontSize: 16,
   },
   text_footer: {
     color: colors.white,

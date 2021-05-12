@@ -3,13 +3,13 @@ import {
   View,
   Text,
   TouchableOpacity,
-  TextInput,
+  TextInput,  
   Platform,
   StyleSheet,
   StatusBar,
-  Alert,
   ScrollView,
 } from "react-native";
+import Axios from '../../data/axios'
 import * as Animatable from "react-native-animatable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
@@ -17,25 +17,112 @@ import colors from "../../assets/colors/colors";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 const SignUpScreen = ({ navigation }) => {
+
+
+  
+
   const [data, setData] = React.useState({
     username: "",
     password: "",
+    email:"",
     check_textInputChange: false,
     secureTextEntry: true,
     isValidUser: true,
     isValidPassword: true,
+    isValidPConfirmassword: false,
+    isValidEmail:false,
+    errorMessagePw:null,
+    confirmPassword: null,
+    errorMessageEmail:null,
+    registerMessage:null,
+    userMessage:null
   });
 
-  const textInputChange = (val) => {};
+  const textInputChange = (val) => {
+    setData({...data,username:val})
+  };
 
-  const handlePasswordChange = (val) => {};
+  const handlePasswordChange = (val) => {
+    const hasNumber = /\d/.test(val)?true : false
+    const hasSixCharacters = val.length>=6?true : false
+    if(hasNumber && hasSixCharacters)
+    {
+      setData({...data,isValidPassword:true,password:val,errorMessagePw:null})
+    }
+    else{
+      setData({...data,isValidPassword:false,errorMessagePw:"Password must have at least 6 letters including numbers"})
+    } 
+  };
 
-  const updateSecureTextEntry = () => {};
+  const handleConfirmPasswordChange = (val) => {
+    if(data.password===val)
+    {
+      setData({...data,isValidPasswordChange:true,confirmPassword:null})
+    }
+    else{
+      setData({...data,isValidPasswordChange:false,confirmPassword: "Password didn't match"})
 
-  const handleValidUser = (val) => {};
+    }
+  };
 
-  const loginHandle = (userName, password) => {};
 
+  const updateSecureTextEntry = () => {
+    setData({...data,secureTextEntry:!data.secureTextEntry})
+
+  };
+
+  const handleEmailAddress =(val) =>{
+    const validEmail= /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(val)?true : false
+    console.log(validEmail)
+
+    if(validEmail)
+    {
+      setData({...data,isValidEmail:true,errorMessageEmail:null, email:val})
+
+    }
+    else{
+      setData({...data,isValidEmail:false,errorMessageEmail:"The email Format is incorrect"})
+    }
+
+  }
+
+  const handleValidUser = (val) => {
+    const hasSixCharacters = val.length>=6?true : false
+
+    if(hasSixCharacters)
+    {
+      setData({...data,isValidUser:true,userMessage:null})
+    }
+    else{
+      setData({...data,isValidUser:false,userMessage:"Username must be of 6 characters"})
+
+    }
+
+  };
+
+  const registerHandle = async (username, password,email) => {
+    if(username!=="" && password!==""&& email!=="" && data.isValidUser && data.isValidPassword && data.isValidEmail)
+    {
+      PostData(username , password , email)
+
+    }
+    else{
+      setData({...data,registerMessage:"The registration forms are not complete"})
+    }
+  };
+  const PostData = async(username , password , email )=>{
+    setData({...data,registerMessage:null})
+    await Axios.post("/register",{username,password,email})
+    .then(response => {
+      setData({...data,registerMessage:null})
+      navigation.navigate({name:"login",params:{registerMessage:response.data}})
+    })
+    .catch(err=>{
+      setData({...data,registerMessage:("err",err)})
+
+    })
+    
+  } 
   return (
     <>
       <ScrollView style={styles.container}>
@@ -70,7 +157,7 @@ const SignUpScreen = ({ navigation }) => {
               style={[
                 styles.textInput,
                 {
-                  color: colors.white,
+                  color: colors.black,
                 },
               ]}
               autoCapitalize="none"
@@ -86,7 +173,7 @@ const SignUpScreen = ({ navigation }) => {
           {data.isValidUser ? null : (
             <Animatable.View animation="fadeInLeft" duration={500}>
               <Text style={styles.errorMsg}>
-                Username must be 4 characters long.
+                {data.userMessage}
               </Text>
             </Animatable.View>
           )}
@@ -129,7 +216,7 @@ const SignUpScreen = ({ navigation }) => {
           {data.isValidPassword ? null : (
             <Animatable.View animation="fadeInLeft" duration={500}>
               <Text style={styles.errorMsg}>
-                Password must be 8 characters long.
+                {data.errorMessagePw}
               </Text>
             </Animatable.View>
           )}
@@ -158,7 +245,7 @@ const SignUpScreen = ({ navigation }) => {
                 },
               ]}
               autoCapitalize="none"
-              onChangeText={(val) => handlePasswordChange(val)}
+              onChangeText={(val) => handleConfirmPasswordChange(val)}
             />
             <TouchableOpacity onPress={updateSecureTextEntry}>
               {data.secureTextEntry ? (
@@ -168,10 +255,10 @@ const SignUpScreen = ({ navigation }) => {
               )}
             </TouchableOpacity>
           </View>
-          {data.isValidPassword ? null : (
+          {data.isValidConfirmPassword ? null : (
             <Animatable.View animation="fadeInLeft" duration={500}>
               <Text style={styles.errorMsg}>
-                Password must be 8 characters long.
+                {data.confirmPassword}
               </Text>
             </Animatable.View>
           )}
@@ -188,10 +275,12 @@ const SignUpScreen = ({ navigation }) => {
             Email
           </Text>
           <View style={styles.action}>
-            <FontAwesome icon={"messages"} color={colors.green} size={20} />
+            <Feather name="mail" color={colors.green} size={20} />
             <TextInput
-              type="email"
+              
               placeholder="Your Email"
+              keyboardType="email-address"
+              autoCompleteType="email"
               style={[
                 styles.textInput,
                 {
@@ -199,8 +288,7 @@ const SignUpScreen = ({ navigation }) => {
                 },
               ]}
               autoCapitalize="none"
-              onChangeText={(val) => textInputChange(val)}
-              onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
+              onEndEditing={(e) => handleEmailAddress(e.nativeEvent.text)}
             />
             {data.check_textInputChange ? (
               <Animatable.View animation="bounceIn">
@@ -208,12 +296,16 @@ const SignUpScreen = ({ navigation }) => {
               </Animatable.View>
             ) : null}
           </View>
-          {data.isValidUser ? null : (
+          {data.isValidEmail ? null : (
             <Animatable.View animation="fadeInLeft" duration={500}>
-              <Text style={styles.errorMsg}>Email Wrong</Text>
+              <Text style={styles.errorMsg}>{data.errorMessageEmail}</Text>
             </Animatable.View>
           )}
-
+          {data.registerMessage ?  (
+            <Animatable.View animation="fadeInLeft" duration={500}>
+              <Text style={styles.errorMsg}>{data.registerMessage}</Text>
+            </Animatable.View>
+          ):null}
           <View style={styles.button}>
             <TouchableOpacity
               style={[
@@ -223,7 +315,7 @@ const SignUpScreen = ({ navigation }) => {
                 },
               ]}
               onPress={() => {
-                loginHandle(data.username, data.password);
+                registerHandle(data.username, data.password, data.email);
               }}
             >
               <Text
@@ -234,13 +326,13 @@ const SignUpScreen = ({ navigation }) => {
                   },
                 ]}
               >
-                Sign Up
+                Register
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               onPress={() => {
-                console.log("pressed");
+                navigation.navigate("login")
               }}
               style={[
                 styles.signIn,
@@ -273,7 +365,7 @@ const SignUpScreen = ({ navigation }) => {
             <ScrollView styles={styles.socialLogin} horizontal>
               <TouchableOpacity
                 onPress={() => {
-                  console.log("pressed");
+                  console.log("Google Login");
                 }}
                 style={[
                   styles.signIn,

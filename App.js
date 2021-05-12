@@ -12,7 +12,7 @@ const App = () => {
     <NavigationContainer>
       <PaperProvider>
         <Stack.Navigator initialRouteName="login" headerMode={"none"}>
-          <Stack.Screen name="login" component={LoginScreen} />
+          <Stack.Screen name="login" component={LoginScreen}/>
           <Stack.Screen name="signup" component={SignUpScreen} />
           <Stack.Screen name="application" component={Tabs} />
         </Stack.Navigator>
