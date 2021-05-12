@@ -18,9 +18,6 @@ import Icon from "react-native-vector-icons/FontAwesome";
 
 const SignUpScreen = ({ navigation }) => {
 
-
-  
-
   const [data, setData] = React.useState({
     username: "",
     password: "",

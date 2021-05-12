@@ -15,6 +15,8 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
 import colors from "../../assets/colors/colors";
 import Icon from "react-native-vector-icons/FontAwesome";
+import Axios from '../../data/axios'
+
 
 const SignInScreen = ({ navigation, route }) => {
   const [data, setData] = React.useState({
@@ -26,7 +28,9 @@ const SignInScreen = ({ navigation, route }) => {
     isValidPassword: true,
     errorMessagePw:null,
     routeMessage:null,
-    registerMessage:"register",
+    registerMessage:null,
+    userMessage:null,
+    LoginMessage:null
   });
 
 
@@ -39,7 +43,7 @@ const SignInScreen = ({ navigation, route }) => {
     const hasSixCharacters = val.length>=6?true : false
     if(hasNumber && hasSixCharacters)
     {
-      setData({...data,isValidPassword:true,password:val})
+      setData({...data,isValidPassword:true,password:val,errorMessagePw:null})
     }
     else{
       setData({...data,isValidPassword:false,errorMessagePw:"Password must have at least 6 letters including numbers"})
@@ -50,9 +54,56 @@ const SignInScreen = ({ navigation, route }) => {
     setData({...data,secureTextEntry:!data.secureTextEntry})
   };
 
-  const handleValidUser = (val) => {};
+  const handleValidUser = (val) => {
+    const hasSixCharacters = val.length>=6?true : false
 
-  const loginHandle = (userName, password) => {};
+    if(hasSixCharacters)
+    {
+      setData({...data,isValidUser:true,userMessage:null})
+    }
+    else{
+      setData({...data,isValidUser:false,userMessage:"Username must be of 6 characters"})
+
+    }
+  };
+
+  const loginHandle = (username, password) => {
+    if(username!=="" && password!==""  && data.isValidUser && data.isValidPassword)
+    {
+      setData({...data,LoginMessage:null})
+
+      checkUser(username, password)
+
+    }
+    else{
+      setData({...data,LoginMessage:"The authorization forms are not valid."})
+    }
+  };
+
+  const checkUser = (username , password)=>{
+    setData({...data,LoginMessage:null})
+     Axios.post("/login",{username,password})
+    .then(response => {
+      let {error,success} = response.data
+      
+      if(error.username)
+      {
+        setData({...data,isValidUser:false,userMessage:errusername})
+      }
+      else if(error.password)
+      {
+        setData({...data,isValidPassword:false,errorMessagePw:errpassword})
+      }
+      else if (success.username && success.password){
+        navigation.navigate("application")
+      }
+    })
+    .catch(err=>{
+      setData({...data,LoginMessage:("err",err)})
+
+    })
+    
+  }
 
   return (
     <>
@@ -105,7 +156,7 @@ const SignInScreen = ({ navigation, route }) => {
           {data.isValidUser ? null : (
             <Animatable.View animation="fadeInLeft" duration={500}>
               <Text style={styles.errorMsg}>
-                Username must be 4 characters long.
+                {data.userMessage}
               </Text>
             </Animatable.View>
           )}
@@ -158,6 +209,14 @@ const SignInScreen = ({ navigation, route }) => {
               Forgot password?
             </Text>
           </TouchableOpacity>
+
+          {data.LoginMessage ? null : (
+            <Animatable.View animation="fadeInLeft" duration={500}>
+              {data.LoginMessage!==null?(<Text style={styles.errorMsg}>
+                {data.LoginMessage}
+              </Text>):null}
+            </Animatable.View>
+          )}
           <View style={styles.button}>
             <TouchableOpacity
               style={[
@@ -166,10 +225,7 @@ const SignInScreen = ({ navigation, route }) => {
                   width: "100%",
                 },
               ]}
-              onPress={() => {
-                // loginHandle(data.username, data.password);
-                navigation.navigate("application");
-              }}
+              onPress={() => loginHandle(data.username, data.password)}
             >
               <Text
                 style={[
@@ -179,7 +235,7 @@ const SignInScreen = ({ navigation, route }) => {
                   },
                 ]}
               >
-                Sign In
+                Login
               </Text>
             </TouchableOpacity>
 
