@@ -22,14 +22,13 @@ const SignUpScreen = ({ navigation }) => {
     username: "",
     password: "",
     email:"",
+    name:"",
     check_textInputChange: false,
     secureTextEntry: true,
     isValidUser: true,
     isValidPassword: true,
-    isValidPConfirmassword: false,
     isValidEmail:false,
     errorMessagePw:null,
-    confirmPassword: null,
     errorMessageEmail:null,
     registerMessage:null,
     userMessage:null
@@ -38,6 +37,11 @@ const SignUpScreen = ({ navigation }) => {
   const textInputChange = (val) => {
     setData({...data,username:val})
   };
+
+  const inputChangeName=(val)=>{
+      setData({...data,name:val})
+  }
+  
 
   const handlePasswordChange = (val) => {
     const hasNumber = /\d/.test(val)?true : false
@@ -51,23 +55,12 @@ const SignUpScreen = ({ navigation }) => {
     } 
   };
 
-  const handleConfirmPasswordChange = (val) => {
-    if(data.password===val)
-    {
-      setData({...data,isValidPasswordChange:true,confirmPassword:null})
-    }
-    else{
-      setData({...data,isValidPasswordChange:false,confirmPassword: "Password didn't match"})
-
-    }
-  };
 
 
   const updateSecureTextEntry = () => {
     setData({...data,secureTextEntry:!data.secureTextEntry})
 
   };
-
   const handleEmailAddress =(val) =>{
     const validEmail= /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(val)?true : false
     console.log(validEmail)
@@ -97,25 +90,30 @@ const SignUpScreen = ({ navigation }) => {
 
   };
 
-  const registerHandle = async (username, password,email) => {
-    if(username!=="" && password!==""&& email!=="" && data.isValidUser && data.isValidPassword && data.isValidEmail)
+  const registerHandle =  (username, password,email,name) => {
+    if(username!=="" && password!=="" && name!==""&& email!=="" && data.isValidUser && data.isValidPassword && data.isValidEmail)
     {
-      PostData(username , password , email)
+
+      PostData(username , password , email,name)
+      console.log(data)
 
     }
     else{
       setData({...data,registerMessage:"The registration forms are not complete"})
     }
   };
-  const PostData = async(username , password , email )=>{
+  const PostData = (username , password , email , name)=>{
     setData({...data,registerMessage:null})
-    await Axios.post("/register",{username,password,email})
+     Axios.post("/register",{username,password,email,name})
     .then(response => {
       setData({...data,registerMessage:null})
-      navigation.navigate({name:"login",params:{registerMessage:response.data}})
+      if(response.data)
+      {
+        navigation.navigate({name:"login",params:{registerMessage:response.data}})
+      }
     })
     .catch(err=>{
-      setData({...data,registerMessage:("err",err)})
+      setData({...data,registerMessage:("err"+err)})
 
     })
     
@@ -174,6 +172,31 @@ const SignUpScreen = ({ navigation }) => {
               </Text>
             </Animatable.View>
           )}
+<Text
+            style={[
+              styles.text_footer,
+              {
+                color: colors.black,
+                fontWeight: "bold",
+              },
+            ]}
+          >
+            Full-name
+          </Text>
+          <View style={styles.action}>
+            <FontAwesome name="user" color={colors.green} size={20} />
+            <TextInput
+              placeholder="Your Username"
+              style={[
+                styles.textInput,
+                {
+                  color: colors.black,
+                },
+              ]}
+              autoCapitalize="none"
+              onChangeText={(val) => inputChangeName(val)}
+            />
+          </View>
 
           <Text
             style={[
@@ -217,49 +240,7 @@ const SignUpScreen = ({ navigation }) => {
               </Text>
             </Animatable.View>
           )}
-          <Text
-            style={[
-              styles.text_footer,
-              {
-                color: colors.black,
-                marginTop: 15,
-                fontWeight: "bold",
-              },
-            ]}
-          >
-            Confirm Password
-          </Text>
-          <View style={styles.action}>
-            <Feather name="lock" color={colors.green} size={20} />
-            <TextInput
-              placeholder="Your Password"
-              placeholderTextColor={colors.grey}
-              secureTextEntry={data.secureTextEntry ? true : false}
-              style={[
-                styles.textInput,
-                {
-                  color: colors.black,
-                },
-              ]}
-              autoCapitalize="none"
-              onChangeText={(val) => handleConfirmPasswordChange(val)}
-            />
-            <TouchableOpacity onPress={updateSecureTextEntry}>
-              {data.secureTextEntry ? (
-                <Feather name="eye-off" color={colors.grey} size={20} />
-              ) : (
-                <Feather name="eye" color={colors.grey} size={20} />
-              )}
-            </TouchableOpacity>
-          </View>
-          {data.isValidConfirmPassword ? null : (
-            <Animatable.View animation="fadeInLeft" duration={500}>
-              <Text style={styles.errorMsg}>
-                {data.confirmPassword}
-              </Text>
-            </Animatable.View>
-          )}
-
+         
           <Text
             style={[
               styles.text_footer,
@@ -312,7 +293,7 @@ const SignUpScreen = ({ navigation }) => {
                 },
               ]}
               onPress={() => {
-                registerHandle(data.username, data.password, data.email);
+                registerHandle(data.username, data.password, data.email,data.name);
               }}
             >
               <Text

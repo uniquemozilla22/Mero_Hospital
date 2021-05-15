@@ -4,6 +4,8 @@ import Layout from "./Layout.js";
 import { View, StyleSheet } from "react-native";
 import colors from "../assets/colors/colors.js";
 const ChatScreen = () => {
+
+
   return (
     <>
       <ChatCategory />

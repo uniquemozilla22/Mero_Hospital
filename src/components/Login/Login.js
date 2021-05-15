@@ -9,6 +9,7 @@ import {
   StatusBar,
   Alert,
   ScrollView,
+  AsyncStorage
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -16,6 +17,7 @@ import Feather from "react-native-vector-icons/Feather";
 import colors from "../../assets/colors/colors";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Axios from '../../data/axios'
+// import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 const SignInScreen = ({ navigation, route }) => {
@@ -80,7 +82,8 @@ const SignInScreen = ({ navigation, route }) => {
     }
   };
 
-  const checkUser = (username , password)=>{
+  
+  const checkUser =  (username , password)=>{
     setData({...data,LoginMessage:null})
      Axios.post("/login",{username,password})
     .then(response => {
@@ -88,14 +91,24 @@ const SignInScreen = ({ navigation, route }) => {
       
       if(error.username)
       {
-        setData({...data,isValidUser:false,userMessage:errusername})
+        setData({...data,isValidUser:false,userMessage:error.username})
       }
       else if(error.password)
       {
-        setData({...data,isValidPassword:false,errorMessagePw:errpassword})
+        setData({...data,isValidPassword:false,errorMessagePw:error.password})
       }
-      else if (success.username && success.password){
-        navigation.navigate("application")
+      else if (success){
+        try{
+            AsyncStorage.removeItem('@user_token');
+            AsyncStorage.removeItem('@user_data');
+           AsyncStorage.setItem('@user_token',success.token);
+           AsyncStorage.setItem('@user_data',success);
+
+          navigation.navigate({name:"application"})
+        }
+        catch (e){
+          throw e
+        }
       }
     })
     .catch(err=>{
@@ -210,13 +223,11 @@ const SignInScreen = ({ navigation, route }) => {
             </Text>
           </TouchableOpacity>
 
-          {data.LoginMessage ? null : (
-            <Animatable.View animation="fadeInLeft" duration={500}>
-              {data.LoginMessage!==null?(<Text style={styles.errorMsg}>
+          {data.LoginMessage!==null ? <Animatable.View animation="fadeInLeft" duration={500}>
+              <Text style={styles.errorMsg}>
                 {data.LoginMessage}
-              </Text>):null}
-            </Animatable.View>
-          )}
+              </Text>
+            </Animatable.View> :null}
           <View style={styles.button}>
             <TouchableOpacity
               style={[

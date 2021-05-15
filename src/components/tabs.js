@@ -9,7 +9,7 @@ import StoreScreen from "../screens/StoreScreen.js";
 
 const Tab = createBottomTabNavigator();
 
-const tabs = () => {
+const tabs = ({navigation, route}) => {
   return (
     <Tab.Navigator
       initialRouteName="Homes"
