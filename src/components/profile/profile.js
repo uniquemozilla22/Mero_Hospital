@@ -33,9 +33,9 @@ return(
                   },
                 ]}
               >
-                John Doe
+                {data.isDoctor?"Dr."+ data.name: data.name}
               </Title>
-              <Caption style={styles.caption}>@j_doe</Caption>
+              <Caption style={styles.caption}>{"@"+data.username}</Caption>
             </View>
           </View>
         </View>
@@ -56,7 +56,7 @@ return(
           <View style={styles.row}>
             <Icon name="email" color={colors.green} size={20} />
             <Text style={{ color: colors.black, marginLeft: 20 }}>
-              john_doe@email.com
+              {data.email}
             </Text>
           </View>
         </View>

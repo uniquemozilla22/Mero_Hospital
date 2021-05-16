@@ -107,12 +107,12 @@ const SignInScreen = ({ navigation, route }) => {
           navigation.navigate({name:"application"})
         }
         catch (e){
-          throw e
+          console.log(e)
         }
       }
     })
     .catch(err=>{
-      setData({...data,LoginMessage:("err",err)})
+      setData({...data,LoginMessage:("err"+err)})
 
     })
     

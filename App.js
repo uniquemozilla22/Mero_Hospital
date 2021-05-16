@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import {View, AsyncStorage} from 'react-native'
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Tabs from "./src/components/tabs";
@@ -7,14 +8,39 @@ import LoginScreen from "./src/screens/LoginScreen";
 import SignUpScreen from "./src/components/SignUp/SignUp";
 const App = () => {
   const Stack = createStackNavigator();
+  let [displayLoginPage,setDisplayLoginPage] = useState()
+
+  const appDecider =() =>{
+
+    AsyncStorage.getItem("@user_token")
+    .then((token) => {
+      console.log(token)
+      if(!token)
+      {
+        setDisplayLoginPage(true)
+        return "login"
+
+      }else{
+        setDisplayLoginPage(true)
+        return "application"
+      }
+    })
+    .catch((error) =>{
+      console.log(error)
+      setDisplayLoginPage(true)
+        return "application"
+    })
+  }
+
+    
 
   return (
     <NavigationContainer>
       <PaperProvider>
-        <Stack.Navigator initialRouteName="login" headerMode={"none"}>
+        <Stack.Navigator initialRouteName={()=>appDecider()} headerMode={"none"}>
+          <Stack.Screen name="application" component={Tabs} />
           <Stack.Screen name="login" component={LoginScreen}/>
           <Stack.Screen name="signup" component={SignUpScreen} />
-          <Stack.Screen name="application" component={Tabs} />
         </Stack.Navigator>
       </PaperProvider>
     </NavigationContainer>

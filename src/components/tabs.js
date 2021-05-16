@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import {AsyncStorage} from 'react-native'
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/HomeScreen.js";
 import IntroScreen from "../screens/ChatScreen.js";
@@ -9,7 +10,11 @@ import StoreScreen from "../screens/StoreScreen.js";
 
 const Tab = createBottomTabNavigator();
 
+
+
+
 const tabs = ({navigation, route}) => {
+
   return (
     <Tab.Navigator
       initialRouteName="Homes"

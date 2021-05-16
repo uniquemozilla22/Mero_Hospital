@@ -2,6 +2,7 @@ import React from "react";
 import TopBar from "./topBar";
 import Greet from "./Greet";
 import ContentHome from "./ContentHome";
+import Layout from '../../screens/Layout'
 
 const Home = () => {
   const Messages = [
@@ -11,11 +12,11 @@ const Home = () => {
     "Get a Appointment",
   ];
   return (
-    <>
+    <Layout>
       <TopBar location={"Kathmandu"} />
       <Greet user={"Yogesh"} />
       <ContentHome Messages={Messages} />
-    </>
+    </Layout>
   );
 };
 

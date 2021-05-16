@@ -14,17 +14,18 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import colors from "../assets/colors/colors";
 import axios from "../data/axios";
 
-const ProfileScreen = () => {
+const ProfileScreen = ({navigation}) => {
 
-  const [userData, setUserData] = React.useState()
+  const [userData, setUserData] = React.useState(null)
 
   
   React.useEffect(()=>{
     AsyncStorage.getItem("@user_token")
-    .then(async (data) =>{
-    await axios.get("/user_data"+data)
+    .then(async (token) =>{
+    await axios.get("/user_data"+token)
     .then(response=>{
-        console.log(response)
+      console.log(response.data)
+        setUserData(response.data)
     })
     .catch(error=>{
       console.log(error)
@@ -35,12 +36,22 @@ const ProfileScreen = () => {
       console.log(error)})
   },[])
 
+  const logout = ()=>{
+    AsyncStorage.removeItem("@user_token")
+    .then(() =>{
+    navigation.navigate("login")
+    })
+    .catch(error=>{
+      navigation.navigate("login")
+      console.log(error)
+    })
+  }
 
   return (
     <Layout>
       <SafeAreaView style={styles.container}>
         
-        <Profile />
+        {userData!==null?<Profile data={userData}/>:null}
         <View style={styles.infoBoxWrapper}>
           <View
             style={[
@@ -89,7 +100,7 @@ const ProfileScreen = () => {
               <Text style={styles.menuItemText}>Support</Text>
             </View>
           </TouchableRipple>
-          <TouchableRipple onPress={() => {}}>
+          <TouchableRipple onPress={() => logout()}>
             <View style={styles.menuItem}>
               <Icon name="logout" color={colors.green} size={25} />
               <Text style={styles.menuItemText}>Logout</Text>

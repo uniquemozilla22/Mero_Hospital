@@ -63,7 +63,6 @@ const SignUpScreen = ({ navigation }) => {
   };
   const handleEmailAddress =(val) =>{
     const validEmail= /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(val)?true : false
-    console.log(validEmail)
 
     if(validEmail)
     {
@@ -93,10 +92,7 @@ const SignUpScreen = ({ navigation }) => {
   const registerHandle =  (username, password,email,name) => {
     if(username!=="" && password!=="" && name!==""&& email!=="" && data.isValidUser && data.isValidPassword && data.isValidEmail)
     {
-
       PostData(username , password , email,name)
-      console.log(data)
-
     }
     else{
       setData({...data,registerMessage:"The registration forms are not complete"})

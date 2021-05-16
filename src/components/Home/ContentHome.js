@@ -28,7 +28,7 @@ const ContentHome = ({ Messages }) => {
           />
         </View>
         <HeadingCard
-          path=""
+          path="appointment"
           title={Messages[3]}
           source={
             "https://img.freepik.com/free-vector/events-concept-illustration_114360-931.jpg?size=626&ext=jpg&ga=GA1.2.1449299337.1618790400"
