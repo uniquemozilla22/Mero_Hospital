@@ -2,11 +2,13 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import colors from "../../../assets/colors/colors.js";
 
-const Heading = () => {
+const TitleHeading = ({title}) => {
+  title= title.split(" ")
+  
   return (
     <View style={styles.greetingUser}>
       <Text style={styles.heading}>
-        Choose Appointment <Text style={styles.redColor}>Time</Text>
+        {title[0]} <Text style={styles.redColor}>{title[1]}</Text>
       </Text>
     </View>
   );
@@ -18,11 +20,11 @@ const styles = StyleSheet.create({
   },
   redColor: {
     color: colors.green,
-    fontWeight: "bold",
   },
   heading: {
+    fontWeight: "bold",
     fontSize: 20,
   },
 });
 
-export default Heading;
+export default TitleHeading;

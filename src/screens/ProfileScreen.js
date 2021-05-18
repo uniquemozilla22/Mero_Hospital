@@ -17,6 +17,7 @@ import axios from "../data/axios";
 const ProfileScreen = ({navigation}) => {
 
   const [userData, setUserData] = React.useState(null)
+  const [appointments,setAppointments]=React.useState(null)
 
   
   React.useEffect(()=>{
@@ -28,12 +29,40 @@ const ProfileScreen = ({navigation}) => {
         setUserData(response.data)
     })
     .catch(error=>{
-      console.log(error)
+      Alert.alert(
+        "User Data Fetching Error ",
+        error
+
+        [
+          { text: "OK", onPress: () => console.log("OK Pressed") }
+        ]
+      );
+    })
+    await axios.get("/user_appointment"+token)
+    .then(response=>{
+      setAppointments(response.data)
+    })
+    .catch(error=>{
+      Alert.alert(
+        "Appointment Fetching Error! ",
+        error
+
+        [
+          { text: "OK", onPress: () => console.log("OK Pressed") }
+        ]
+      );
     })
     
     })
     .catch(error=>{
-      console.log(error)})
+      Alert.alert(
+        "Token Fetching Error",
+        error
+
+        [
+          { text: "OK", onPress: () => console.log("OK Pressed") }
+        ]
+      );})
   },[])
 
   const logout = ()=>{
@@ -66,8 +95,8 @@ const ProfileScreen = ({navigation}) => {
             <Caption>Wallet</Caption>
           </View>
           <View style={styles.infoBox}>
-            <Title>12</Title>
-            <Caption>Orders</Caption>
+            <Title>{appointments!==null?appointments.length:"..."}</Title>
+            <Caption>Appontments</Caption>
           </View>
         </View>
 
