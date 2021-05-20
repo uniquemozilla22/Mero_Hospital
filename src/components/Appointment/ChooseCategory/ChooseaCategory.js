@@ -11,12 +11,19 @@ const ChooseACategory =()=>{
     const [cards,setCards]=useState()    
 
     React.useEffect(()=>{
-        fetchData()
+        fetchCategoryData()
+        fetchUserAppointment()
 
     },[])
 
+    const fetchUserAppointment=()=>{
+
+        axios.get()
+
+    }
+
     
-    const fetchData=()=>{
+    const fetchCategoryData=()=>{
         axios.get('/categories')
         .then(({data})=>{
             setDataCategory(data)

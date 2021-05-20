@@ -7,6 +7,7 @@ import colors from '../../../assets/colors/colors.js'
 import Heading from './Heading.js'
 import TitleHeading from './TItleHeading.js'
 import axios from '../../../data/axios.js'
+import { List } from 'react-native-paper'
 
 
 const AppointmentFrom = ({navigation, route}) =>{
@@ -16,6 +17,7 @@ const AppointmentFrom = ({navigation, route}) =>{
     
     const [visible, setVisible] = React.useState(false);
     const [dateVisible,setDateVisible]= React.useState(false);
+    const [UserFeildAppointment,setUserFeildAppointment]=React.useState(null);
     const onDismiss = React.useCallback(() => {
       setVisible(false);
     }, [setVisible]);
@@ -25,6 +27,49 @@ const AppointmentFrom = ({navigation, route}) =>{
       setDateVisible(true)
       setDates(date)
     }, []);
+
+    React.useEffect(()=>{
+      getUserFeildAppointments()
+    },[])
+
+
+    const getUserFeildAppointments=async()=>{    
+      await AsyncStorage.getItem("@user_token")
+      .then((token)=>{
+      axios.get("/userfeildappointment"+token,{params:{feild:categoryId}})
+      .then(response=>{
+
+        let listOfAppointments= response.data.map((data)=>{
+          return <List.Item key={data._id} title={ "Date : "+data.date.toLocaleString().split("T")[0]} description={data.date.toLocaleString().split("T")[1].split(".")[0]} right={props => <List.Icon {...props} onPress={()=>console.log("pressed")} icon="delete" color={colors.red} />}/>
+        })
+
+        setUserFeildAppointment(listOfAppointments)
+        
+      })
+      .catch(error=>{
+        Alert.alert(
+          "Check your Internet! ",
+          "Server Fetching Errors:"+error
+  
+          [
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+          ]
+        );
+      })
+    })
+    .catch((error)=>{
+      Alert.alert(
+        "Appointment Not Registered! ",
+        "Server Errors:"+error
+
+        [
+          { text: "OK", onPress: () => console.log("OK Pressed") }
+        ]
+      );
+    })
+
+    }
+
 
     const postData=async()=>{
       await AsyncStorage.getItem("@user_token")
@@ -95,6 +140,7 @@ const AppointmentFrom = ({navigation, route}) =>{
               <Text visible={dateVisible}><Text style={styles.head}>Date:</Text> {dates.toLocaleString().split(",")[0].trim()}</Text>
               <Text visible={dateVisible}><Text style={styles.head}>Time:</Text> {dates.toLocaleString().split(",")[1].trim()}</Text>
             </View></>:null)}
+            {UserFeildAppointment}
             <TouchableOpacity
               onPress={() => setVisible(true)}
               style={[

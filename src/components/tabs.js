@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import {AsyncStorage} from 'react-native'
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/HomeScreen.js";
 import IntroScreen from "../screens/ChatScreen.js";
 import COLORS from "../assets/colors/colors";
 import ProfileScreen from "../screens/ProfileScreen";
 import Icons from "react-native-vector-icons/MaterialCommunityIcons";
-import StoreScreen from "../screens/StoreScreen.js";
 
 const Tab = createBottomTabNavigator();
 
@@ -38,15 +36,7 @@ const tabs = ({navigation, route}) => {
           ),
         }}
       />
-      <Tab.Screen
-        name={"shop"}
-        component={StoreScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icons name="store-outline" color={color} size={size} />
-          ),
-        }}
-      />
+      
       <Tab.Screen
         name={"Profile"}
         component={ProfileScreen}

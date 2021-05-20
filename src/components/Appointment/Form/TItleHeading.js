@@ -8,7 +8,7 @@ const TitleHeading = ({title}) => {
   return (
     <View style={styles.greetingUser}>
       <Text style={styles.heading}>
-        {title[0]} <Text style={styles.redColor}>{title[1]}</Text>
+        {title[0].toUpperCase()} <Text style={styles.redColor}>{title.splice(1,title.length).join(" ").toUpperCase()}</Text>
       </Text>
     </View>
   );
