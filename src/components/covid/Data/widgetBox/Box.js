@@ -7,9 +7,9 @@ import { Block } from 'galio-framework'
 const Box = ({title, today , total}) =>{
 return (
     <Block  style={styles.card}>
-            <Text style={styles.cardHeadings}>{title}</Text>
+            <Text style={styles.cardHeadings}>{title.split(" ")[0]}<Text style={{color:colors.green}}> {title.split(" ")[1]}</Text></Text>
             <View style={styles.dataContainer}>
-                <Text style={styles.cardHeadings}><Icons name="chevron-up" color={colors.white} size={20} />{today}</Text>
+                <Text style={styles.cardHeadings}><Icons name="chevron-up" color={colors.red} size={20} />{today}</Text>
                 <Text style={styles.cardHeadings}>{total}</Text>
             </View>
         </Block>
@@ -19,24 +19,25 @@ return (
 
 const styles = StyleSheet.create({
     card: {
-        height: 100,
+        width: 200,
         flex:1,
         padding:15,
         borderRadius:15,
+        borderWidth:1,
         marginHorizontal:5,
-        backgroundColor:colors.green,
-        elevation:20,
-
+        backgroundColor:colors.white,
+        borderColor:colors.green,
+        elevation:10,
     },
     cardHeadings:{
-        fontSize:16,
-        fontWeight:'500',
-        color:colors.white,
+        fontSize:18,
+        fontWeight:'bold',
+        color:colors.black,
     },
     dataContainer:{
         flexDirection:'row',
         justifyContent:'space-between',
-        marginTop:'20%'
+        marginTop:'10%'
 
     },
 })

@@ -10,19 +10,25 @@ import {
   Alert,
   ScrollView,
   AsyncStorage,
+  Linking,
   ImageBackground
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import Icons from 'react-native-vector-icons/Entypo'
 import colors from "../../../assets/colors/colors";
 import Icon from "react-native-vector-icons/FontAwesome";
-import Axios from '../../../data/axios'
 import WidgetNews from "../News/widget";
 
 
 const SingleNewsScreen = ({ navigation, route }) => {
 
 let {data}= route.params
+
+let openBrowser=(url)=>{
+  Linking.openURL(url).catch(err => console.error("Couldn't load page", err));
+
+}
+
 
   return (
     <>
@@ -52,7 +58,7 @@ let {data}= route.params
           >
             {data.title}
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=>openBrowser(data.url)}>
             <Text style={{ color: colors.greengrey}}>
               {data.source}
             </Text>
@@ -74,16 +80,14 @@ let {data}= route.params
             {data.summary}
           </Text>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=>openBrowser(data.url)}>
               <Text style={{ color: colors.red, marginVertical: 15 }}>
                 Read More...
               </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("signup")
-              }}
+              onPress={() => openBrowser(data.url)}
               style={[
                 styles.signIn,
                 {

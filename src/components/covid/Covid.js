@@ -3,6 +3,7 @@ import Layout from '../../screens/Layout'
 import Heading from './Heading.js'
 import WidgetData from './Data/widget'
 import WidgetNews from './News/widget'
+import WidgetFAQ from './FAQ/widget'
 
 const Covid =()=>{
 
@@ -13,6 +14,8 @@ const Covid =()=>{
             <WidgetData/>
             <Heading title="Latest News"/>
             <WidgetNews />
+            <Heading title ="COVID Questions"/>
+            <WidgetFAQ/>
 
         </Layout>
     )
