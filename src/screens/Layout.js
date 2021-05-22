@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, ScrollView } from "react-native";
+import { StyleSheet, ScrollView , ToastAndroid} from "react-native";
 import colors from "../assets/colors/colors";
 import { FAB } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
@@ -16,17 +16,33 @@ const Layout = (props) => {
       animated={true}
     />
   ) : null;
-  return (
-    <>
-      <ScrollView style={styles.ViewingIndex}>{props.children}</ScrollView>
-      {fab_button}
-    </>
-  );
+
+
+  try{
+    return (
+      <>
+        <ScrollView style={styles.ViewingIndex}>{props.children}</ScrollView>
+        {fab_button}
+      </>
+    );
+  }
+  catch(error) {
+    ToastAndroid.showWithGravityAndOffset(
+      "There is a error:"+error,
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      25,
+      50
+    );
+
+
+  }
+  
 };
 
 const styles = StyleSheet.create({
   ViewingIndex: {
-    paddingTop: 20,
+    paddingTop: 10,
     paddingHorizontal: 10,
     backgroundColor: colors.white,
   },

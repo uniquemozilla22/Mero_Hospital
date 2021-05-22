@@ -51,7 +51,7 @@ const AppointmentFrom = ({navigation, route}) =>{
           "Check your Internet! ",
           "Server Fetching Errors:"+error
   
-          [
+          [ 
             { text: "OK", onPress: () => console.log("OK Pressed") }
           ]
         );

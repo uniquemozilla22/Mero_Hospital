@@ -4,7 +4,7 @@ import Greet from "./Greet";
 import ContentHome from "./ContentHome";
 import Layout from '../../screens/Layout'
 
-const Home = () => {
+const Home = (props) => {
   const Messages = [
     "Do a Task , Wear a Mask ",
     "Chat with Doctor",
@@ -13,8 +13,8 @@ const Home = () => {
   ];
   return (
     <Layout>
-      <TopBar location={"Kathmandu"} />
-      <Greet user={"Yogesh"} />
+      <TopBar location={props.city} />
+      <Greet user={props.name} />
       <ContentHome Messages={Messages} />
     </Layout>
   );

@@ -14,30 +14,17 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import colors from "../assets/colors/colors";
 import axios from "../data/axios";
 
-const ProfileScreen = ({navigation}) => {
+const ProfileScreen = (props,{navigation}) => {
 
-  const [userData, setUserData] = React.useState(null)
+  console.log(props.user)
+
+  const [userData, setUserData] = React.useState(props.user!==null?props.user:null)
   const [appointments,setAppointments]=React.useState(null)
 
   
   React.useEffect(()=>{
     AsyncStorage.getItem("@user_token")
     .then(async (token) =>{
-    await axios.get("/user_data"+token)
-    .then(response=>{
-      console.log(response.data)
-        setUserData(response.data)
-    })
-    .catch(error=>{
-      Alert.alert(
-        "User Data Fetching Error ",
-        error
-
-        [
-          { text: "OK", onPress: () => console.log("OK Pressed") }
-        ]
-      );
-    })
     await axios.get("/user_appointment"+token)
     .then(response=>{
       setAppointments(response.data)
@@ -52,7 +39,6 @@ const ProfileScreen = ({navigation}) => {
         ]
       );
     })
-    
     })
     .catch(error=>{
       Alert.alert(
