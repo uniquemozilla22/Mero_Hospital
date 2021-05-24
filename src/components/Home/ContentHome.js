@@ -6,6 +6,7 @@ const ContentHome = ({ Messages }) => {
     <>
       <View>
         <HeadingCard
+          path="covid"
           title={Messages[0]}
           source={
             "https://www.skincancer.org/wp-content/uploads/Screen-Shot-2020-10-27-at-12.22.53-PM-1024x548.png"
@@ -20,7 +21,7 @@ const ContentHome = ({ Messages }) => {
             }
           />
           <HeadingCard
-            path="shop"
+            path="covid"
             title={Messages[2]}
             source={
               "https://img.graphicsurf.com/2020/09/people-in-pharmacy-vector-illustration.jpg"

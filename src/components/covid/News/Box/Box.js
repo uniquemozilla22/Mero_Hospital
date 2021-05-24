@@ -14,7 +14,9 @@ const Box =({data}) =>{
 
 
     return(
-        <TouchableOpacity onPress={()=>{navigation.navigate({name:"singlenews",params:{data}})}}>
+        <TouchableOpacity 
+        style={styles.carouselCard}
+        onPress={()=>{navigation.navigate({name:"singlenews",params:{data}})}}>
         <ImagedCarouselCard
        doc width={300}
         height={250}
@@ -23,7 +25,6 @@ const Box =({data}) =>{
           uri: image_url,
         }}
         text={title.slice(0,100)+"..."}
-        style={styles.carouselCard}
       />
       </TouchableOpacity>
     )
@@ -35,9 +36,7 @@ const styles= StyleSheet.create({
     },
     carouselCard:{
         marginHorizontal:5,
-        elevation:10,
-        padding: 5,
-        paddingBottom:10,
+        elevation:20,
     }
 })
 

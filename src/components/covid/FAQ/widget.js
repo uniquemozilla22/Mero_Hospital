@@ -1,40 +1,49 @@
-import axios from 'axios'
-import React, { Component } from 'react'
+import React,{useState,useEffect} from 'react'
 import { Text, View } from 'react-native'
 import {List} from 'react-native-paper'
 import FAQ from '../faq.json'
+import axios from 'axios'
 import Listings from './List/list.js'
+
+
+
 const widgetFAQ = () => {
-  const [data,setData]= React.useState(null)
-  let [faqdisplay,setFAQDisplay]=React.useState([])
 
+  const [datas,setDatas]= useState(null)
+  let [faqDisplay,setFaqDisplay]=useState([])
 
-  const getFaq=()=>{
-    axios.get("https://corona.askbhunte.com/api/v1/faqs")
+  const fetchData=()=>{
+    axios.get("https://corona.askbhunte.com/api/v1/faqs?limit=10")
     .then((response) => {
-      setData(response.data.data)
+      setDatas(response.data.data)
     })
     .catch((error)=>{
-      Data(FAQ.data)
+      setDatas(FAQ.data)
     } )
   }
 
-  React.useState(()=>{
-    getFaq()
-    if(data!==null)
+  const dataFetching = (faq) =>{
+      if (faq)
     {
-      let display=Object.keys(data).map((keys,value)=>{
-        return <Listings key={keys} data={data[value]}/>
+      let display=Object.keys(faq).map((keys,value)=>{
+        return <Listings key={value} data={faq[value]} />
       })
-      setFAQDisplay(display)
+      setFaqDisplay(display)
     }
-  },[])
+  }
+  
+  React.useEffect(()=>{
+    fetchData()
+    dataFetching(datas)
+    }
+  ,[datas])
 
+ 
   
 
   return (
     <List.Section>
-      {faqdisplay}
+      {faqDisplay}
     </List.Section>
   )
 }

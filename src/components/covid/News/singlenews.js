@@ -63,7 +63,7 @@ let openBrowser=(url)=>{
               {data.source}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => openBrowser(data.url)}>
             <Text style={{ color: colors.greengrey, marginBottom: 15 }}>
               {data.updated_at.split("T")[0]}
             </Text>
@@ -110,7 +110,6 @@ let openBrowser=(url)=>{
                 Go to Site
               </Text>
             </TouchableOpacity>
-            <WidgetNews/>
         </Animatable.View>
       </ImageBackground>
     </>

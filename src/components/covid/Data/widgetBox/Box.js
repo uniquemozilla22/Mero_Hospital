@@ -27,17 +27,19 @@ const styles = StyleSheet.create({
         marginHorizontal:5,
         backgroundColor:colors.white,
         borderColor:colors.green,
-        elevation:10,
+        elevation:5,
     },
     cardHeadings:{
-        fontSize:18,
-        fontWeight:'bold',
+        fontSize:16,
         color:colors.black,
     },
     dataContainer:{
+        flex:1,
+        justifyContent:'flex-end',
         flexDirection:'row',
         justifyContent:'space-between',
-        marginTop:'10%'
+        marginTop:'10%',
+        height:"100%"
 
     },
 })

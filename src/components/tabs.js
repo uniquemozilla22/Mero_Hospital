@@ -116,7 +116,7 @@ const tabs = ({navigation, route}) => {
         }}
       />
       <Tab.Screen
-        name={"covid"}
+        name="covid"
         children={()=><CovidScreen />}
         options={{
           tabBarIcon: ({ color, size }) => (

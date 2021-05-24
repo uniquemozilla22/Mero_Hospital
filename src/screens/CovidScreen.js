@@ -7,8 +7,8 @@ const Stack = createStackNavigator();
 
 const CovidScreen = () => {
   return (
-    <Stack.Navigator initialRouteName="covid" headerMode={"none"}>
-      <Stack.Screen name="covid" component={Covid}/>
+    <Stack.Navigator initialRouteName="covidHome" headerMode={"none"}>
+      <Stack.Screen name="covidHome" component={Covid}/>
       <Stack.Screen name="singlenews" component={SingleNewsScreen}/>
     </Stack.Navigator>
   );

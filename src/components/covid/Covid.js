@@ -6,8 +6,6 @@ import WidgetNews from './News/widget'
 import WidgetFAQ from './FAQ/widget'
 
 const Covid =()=>{
-
-
     return(
         <Layout>
             <Heading title="Status"/>
@@ -16,7 +14,6 @@ const Covid =()=>{
             <WidgetNews />
             <Heading title ="COVID Questions"/>
             <WidgetFAQ/>
-
         </Layout>
     )
 }
