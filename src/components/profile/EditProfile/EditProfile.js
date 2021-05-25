@@ -86,7 +86,6 @@ const EditProfile = ({ route }) => {
   const onSubmitHandler=()=>{
     AsyncStorage.getItem("@user_token")
     .then(async (token) =>{
-      console.log(token)
     axios_base.post("/editprofile"+token,{data})
     .then(response=>{
       if(response.data.success)
@@ -102,7 +101,17 @@ const EditProfile = ({ route }) => {
       }
       else{
         Alert.alert(
-          "Data not Posted",
+          "Data Posted Sucessfully",
+          response.data.error,
+  
+          [
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+          ]
+        );
+      }
+      else{
+        Alert.alert(
+          "Internet ErrorData not Posted",
           response.data.error,
   
           [
