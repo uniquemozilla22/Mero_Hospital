@@ -84,7 +84,6 @@ const tabs = ({navigation, route}) => {
       await axios_base.get("/user_data"+token)
       .then(response=>{
         setUser(response.data)
-        console.log(response.data)
       })
       .catch(error=>{
         Alert.alert(

@@ -24,6 +24,7 @@ return(
               size={80}
             />
             <View style={{ marginLeft: 20 }}>
+              
               <Title
                 style={[
                   styles.title,
