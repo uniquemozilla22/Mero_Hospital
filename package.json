@@ -9,7 +9,8 @@
   },
   "proxy": "http://localhost:5000",
   "dependencies": {
-    "@react-native-async-storage/async-storage": "^1.15.4",
+    "@react-native-async-storage/async-storage": "github:react-native-async-storage/async-storage",
+    "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/datetimepicker": "^3.4.7",
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/bottom-tabs": "^5.11.10",
@@ -45,6 +46,7 @@
     "react-native-web": "~0.13.12",
     "react-navigation": "^4.4.4",
     "react-stack-navigation": "^1.0.1",
+    "react-window": "^1.8.6",
     "save": "^2.4.0",
     "styled-components": "^5.2.3"
   },

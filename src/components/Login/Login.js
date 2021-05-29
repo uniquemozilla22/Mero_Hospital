@@ -9,16 +9,14 @@ import {
   StatusBar,
   Alert,
   ScrollView,
-  AsyncStorage
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
 import colors from "../../assets/colors/colors";
 import Icon from "react-native-vector-icons/FontAwesome";
-import Axios from '../../data/axios'
-// import AsyncStorage from '@react-native-async-storage/async-storage'
-
+import Axios from "../../data/axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignInScreen = ({ navigation, route }) => {
   const [data, setData] = React.useState({
@@ -28,95 +26,104 @@ const SignInScreen = ({ navigation, route }) => {
     secureTextEntry: true,
     isValidUser: true,
     isValidPassword: true,
-    errorMessagePw:null,
-    routeMessage:null,
-    registerMessage:null,
-    userMessage:null,
-    LoginMessage:null
+    errorMessagePw: null,
+    routeMessage: null,
+    registerMessage: null,
+    userMessage: null,
+    LoginMessage: null,
   });
 
-
   const textInputChange = (val) => {
-    setData({...data,username:val})
+    setData({ ...data, username: val });
   };
 
   const handlePasswordChange = (val) => {
-    const hasNumber = /\d/.test(val)?true : false
-    const hasSixCharacters = val.length>=6?true : false
-    if(hasNumber && hasSixCharacters)
-    {
-      setData({...data,isValidPassword:true,password:val,errorMessagePw:null})
+    const hasNumber = /\d/.test(val) ? true : false;
+    const hasSixCharacters = val.length >= 6 ? true : false;
+    if (hasNumber && hasSixCharacters) {
+      setData({
+        ...data,
+        isValidPassword: true,
+        password: val,
+        errorMessagePw: null,
+      });
+    } else {
+      setData({
+        ...data,
+        isValidPassword: false,
+        errorMessagePw:
+          "Password must have at least 6 letters including numbers",
+      });
     }
-    else{
-      setData({...data,isValidPassword:false,errorMessagePw:"Password must have at least 6 letters including numbers"})
-    } 
   };
 
   const updateSecureTextEntry = () => {
-    setData({...data,secureTextEntry:!data.secureTextEntry})
+    setData({ ...data, secureTextEntry: !data.secureTextEntry });
   };
 
   const handleValidUser = (val) => {
-    const hasSixCharacters = val.length>=6?true : false
+    const hasSixCharacters = val.length >= 6 ? true : false;
 
-    if(hasSixCharacters)
-    {
-      setData({...data,isValidUser:true,userMessage:null})
-    }
-    else{
-      setData({...data,isValidUser:false,userMessage:"Username must be of 6 characters"})
-
+    if (hasSixCharacters) {
+      setData({ ...data, isValidUser: true, userMessage: null });
+    } else {
+      setData({
+        ...data,
+        isValidUser: false,
+        userMessage: "Username must be of 6 characters",
+      });
     }
   };
 
   const loginHandle = (username, password) => {
-    if(username!=="" && password!==""  && data.isValidUser && data.isValidPassword)
-    {
-      setData({...data,LoginMessage:null})
+    if (
+      username !== "" &&
+      password !== "" &&
+      data.isValidUser &&
+      data.isValidPassword
+    ) {
+      setData({ ...data, LoginMessage: null });
 
-      checkUser(username, password)
-
-    }
-    else{
-      setData({...data,LoginMessage:"The authorization forms are not valid."})
+      checkUser(username, password);
+    } else {
+      setData({
+        ...data,
+        LoginMessage: "The authorization forms are not valid.",
+      });
     }
   };
 
-  
-  const checkUser =  (username , password)=>{
-    setData({...data,LoginMessage:null})
-     Axios.post("/login",{username,password})
-    .then(response => {
-      let {error,success} = response.data
-      
-      if(error.username)
-      {
-        setData({...data,isValidUser:false,userMessage:error.username})
-      }
-      else if(error.password)
-      {
-        setData({...data,isValidPassword:false,errorMessagePw:error.password})
-      }
-      else if (success){
-        try{
-            AsyncStorage.removeItem('@user_token');
-            AsyncStorage.removeItem('@user_data');
-           AsyncStorage.setItem('@user_token',success.token);
-           AsyncStorage.setItem('@user_data',success);
+  const checkUser = (username, password) => {
+    setData({ ...data, LoginMessage: null });
+    Axios.post("/login", { username, password })
+      .then((response) => {
+        let { error, success } = response.data;
 
-          navigation.navigate({name:"application"})
-        }
-        catch (e){
-          console.log(e)
-        }
-      }
-    })
-    .catch(err=>{
-      setData({...data,LoginMessage:("err"+err)})
+        if (error.username) {
+          setData({ ...data, isValidUser: false, userMessage: error.username });
+        } else if (error.password) {
+          setData({
+            ...data,
+            isValidPassword: false,
+            errorMessagePw: error.password,
+          });
+        } else if (success) {
+          try {
+            AsyncStorage.removeItem("@user_token");
+            AsyncStorage.removeItem("@user_data");
+            AsyncStorage.setItem("@user_token", success.token);
+            AsyncStorage.setItem("@user_data", JSON.stringify(success));
 
-    })
-    
-  }
+            navigation.navigate({ name: "application" });
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      })
+      .catch((err) => {
+        setData({ ...data, LoginMessage: "err" + err });
+      });
+  };
 
   return (
     <>
@@ -124,7 +131,11 @@ const SignInScreen = ({ navigation, route }) => {
         <StatusBar backgroundColor={colors.green} barStyle="light-content" />
         <View style={styles.header}>
           <Text style={styles.text_header}>Welcome Back!</Text>
-          {route.params===undefined?null:<Text style={styles.text_header_message}>{route.params.registerMessage}</Text>}
+          {route.params === undefined ? null : (
+            <Text style={styles.text_header_message}>
+              {route.params.registerMessage}
+            </Text>
+          )}
         </View>
         <Animatable.View
           animation="fadeInUpBig"
@@ -168,9 +179,7 @@ const SignInScreen = ({ navigation, route }) => {
           </View>
           {data.isValidUser ? null : (
             <Animatable.View animation="fadeInLeft" duration={500}>
-              <Text style={styles.errorMsg}>
-                {data.userMessage}
-              </Text>
+              <Text style={styles.errorMsg}>{data.userMessage}</Text>
             </Animatable.View>
           )}
 
@@ -211,9 +220,9 @@ const SignInScreen = ({ navigation, route }) => {
           </View>
           {data.isValidPassword ? null : (
             <Animatable.View animation="fadeInLeft" duration={500}>
-              {data.errorMessagePw!==null?(<Text style={styles.errorMsg}>
-                {data.errorMessagePw}
-              </Text>):null}
+              {data.errorMessagePw !== null ? (
+                <Text style={styles.errorMsg}>{data.errorMessagePw}</Text>
+              ) : null}
             </Animatable.View>
           )}
 
@@ -223,11 +232,11 @@ const SignInScreen = ({ navigation, route }) => {
             </Text>
           </TouchableOpacity>
 
-          {data.LoginMessage!==null ? <Animatable.View animation="fadeInLeft" duration={500}>
-              <Text style={styles.errorMsg}>
-                {data.LoginMessage}
-              </Text>
-            </Animatable.View> :null}
+          {data.LoginMessage !== null ? (
+            <Animatable.View animation="fadeInLeft" duration={500}>
+              <Text style={styles.errorMsg}>{data.LoginMessage}</Text>
+            </Animatable.View>
+          ) : null}
           <View style={styles.button}>
             <TouchableOpacity
               style={[
@@ -252,7 +261,7 @@ const SignInScreen = ({ navigation, route }) => {
 
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("signup")
+                navigation.navigate("signup");
               }}
               style={[
                 styles.signIn,
@@ -363,7 +372,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 30,
   },
-  text_header_message:{
+  text_header_message: {
     color: "#fff",
     fontSize: 16,
   },

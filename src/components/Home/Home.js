@@ -2,13 +2,13 @@ import React from "react";
 import TopBar from "./topBar";
 import Greet from "./Greet";
 import ContentHome from "./ContentHome";
-import Layout from '../../screens/Layout'
+import Layout from "../../screens/Layout";
 
 const Home = (props) => {
   const Messages = [
     "Do a Task , Wear a Mask ",
     "Chat with Doctor",
-    "Online Pharmacy",
+    "See Covid Information",
     "Get a Appointment",
   ];
   return (

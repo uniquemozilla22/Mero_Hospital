@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import Layout from '../../../screens/Layout'
+import React, { useState } from "react";
+import Layout from "../../../screens/Layout";
 import * as Animatable from "react-native-animatable";
 import {
   View,
@@ -11,136 +11,139 @@ import {
   StatusBar,
   Alert,
   ScrollView,
-  AsyncStorage,
   Linking,
   ImageBackground,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
-import Icon from 'react-native-vector-icons/Entypo'
-import colors from '../../../assets/colors/colors';
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import Feather from 'react-native-vector-icons/Feather'
-import { useNavigation } from '@react-navigation/native'
-import axios_base from '../../../data/axios';
-
+import Icon from "react-native-vector-icons/Entypo";
+import colors from "../../../assets/colors/colors";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import Feather from "react-native-vector-icons/Feather";
+import { useNavigation } from "@react-navigation/native";
+import axios_base from "../../../data/axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const EditProfile = ({ route }) => {
-
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   const [data, setData] = useState({
     name: "",
     email: "",
     submittable: false,
-    errorEmail: null
-  })
-  const [nameEdit, setNameEdit] = useState("")
-  const [emailEdit, setEmailEdit] = useState("")
+    errorEmail: null,
+  });
+  const [nameEdit, setNameEdit] = useState("");
+  const [emailEdit, setEmailEdit] = useState("");
 
   const nameInput = (val) => {
-    setNameEdit(val)
-  }
+    setNameEdit(val);
+  };
 
-
-  const emailInput = (val) =>{
-    const validEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(val) ? true : false
+  const emailInput = (val) => {
+    const validEmail =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+        val
+      )
+        ? true
+        : false;
 
     if (validEmail) {
-      setEmailEdit(val)
-      setData({ ...data,errorEmail:null})
+      setEmailEdit(val);
+      setData({ ...data, errorEmail: null });
+    } else {
+      setData({ ...data, errorEmail: "Email Format not correct" });
     }
-    else {
-      setData({ ...data,errorEmail:"Email Format not correct"})
-    }
-  }
+  };
 
   const handleNameEditing = (name) => {
-    name = name.trim()
+    name = name.trim();
     if (name !== "") {
-      setData({ ...data, name: name, errorName: null, submittable:true })
+      setData({ ...data, name: name, errorName: null, submittable: true });
+    } else {
+      setData({
+        ...data,
+        name: route.params.userData.name,
+        submittable: false,
+      });
     }
-    else {
-      setData({ ...data, name: route.params.userData.name , submittable :false })
-    }
-  }
+  };
 
   const handleEmailAddress = (val) => {
-    const validEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(val) ? true : false
+    const validEmail =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+        val
+      )
+        ? true
+        : false;
 
     if (validEmail) {
-      setEmailEdit(val)
-      setData({ ...data,email:val,errorEmail:null,submittable:true})
-    }
-    else if(val==="")
-    {
-      setData({ ...data,errorEmail:null,submittable:true,email:route.params.userData.email})
-    }
-    else {
-      setData({ ...data,errorEmail:"Email Format not correct",submittable:false,email:route.params.userData.email})
+      setEmailEdit(val);
+      setData({ ...data, email: val, errorEmail: null, submittable: true });
+    } else if (val === "") {
+      setData({
+        ...data,
+        errorEmail: null,
+        submittable: true,
+        email: route.params.userData.email,
+      });
+    } else {
+      setData({
+        ...data,
+        errorEmail: "Email Format not correct",
+        submittable: false,
+        email: route.params.userData.email,
+      });
     }
 
-    console.log(data.email)
+    console.log(data.email);
+  };
 
-  }
-
-  const onSubmitHandler=()=>{
+  const onSubmitHandler = () => {
     AsyncStorage.getItem("@user_token")
-    .then(async (token) =>{
-    axios_base.post("/editprofile"+token,{data})
-    .then(response=>{
-      if(response.data.success)
-      {
-        Alert.alert(
-          "Data Posted Sucessfully",
-          response.data.success,
-  
-          [
-            { text: "OK", onPress: () => console.log("OK Pressed") }
-          ]
-        );
-      }
-      else{
-        Alert.alert(
-          "Data Posted Sucessfully",
-          response.data.error,
-  
-          [
-            { text: "OK", onPress: () => console.log("OK Pressed") }
-          ]
-        );
-      }
-      else{
-        Alert.alert(
-          "Internet ErrorData not Posted",
-          response.data.error,
-  
-          [
-            { text: "OK", onPress: () => console.log("OK Pressed") }
-          ]
-        );
-      }
-      
-    })
-  })
-  .catch(error=>{
-    Alert.alert(
-      "Please Login and Try again",
+      .then(async (token) => {
+        axios_base.post("/editprofile" + token, { data }).then((response) => {
+          if (response.data.success) {
+            Alert.alert(
+              "Data Posted Sucessfully",
+              response.data.success,
 
-      [
-        { text: "OK", onPress: () => console.log("OK Pressed") }
-      ]
-    );
-  })
-  }
+              [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+            );
+          } else {
+            Alert.alert(
+              "Internet ErrorData not Posted",
+              response.data.error,
 
+              [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+            );
+          }
+        });
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Please Login and Try again",
 
+          [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+        );
+      });
+  };
 
   return data ? (
     <>
-      <ImageBackground style={styles.container} source={{ uri: "https://www.creativefabrica.com/wp-content/uploads/2019/12/18/Web-Sign-in-Edit-Profile-Illustration-Graphics-1.jpg" }}>
+      <ImageBackground
+        style={styles.container}
+        source={{
+          uri: "https://www.creativefabrica.com/wp-content/uploads/2019/12/18/Web-Sign-in-Edit-Profile-Illustration-Graphics-1.jpg",
+        }}
+      >
         <StatusBar background={colors.green} barStyle="light-content" />
-        <TouchableOpacity style={styles.header} onPress={() => navigation.goBack()}>
-          <Text style={styles.text_header}><Icon name={"chevron-left"} size={20} /> Back</Text>
+        <TouchableOpacity
+          style={styles.header}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.text_header}>
+            <Icon name={"chevron-left"} size={20} /> Back
+          </Text>
         </TouchableOpacity>
         <Animatable.View
           animation="fadeInUpBig"
@@ -178,7 +181,6 @@ const EditProfile = ({ route }) => {
               onChangeText={(value) => nameInput(value)}
               onEndEditing={(e) => handleNameEditing(e.nativeEvent.text)}
             />
-
           </View>
 
           <Text
@@ -220,10 +222,12 @@ const EditProfile = ({ route }) => {
               styles.signIn,
               {
                 width: "100%",
-                backgroundColor: data.submittable ? colors.green : colors.greengrey
+                backgroundColor: data.submittable
+                  ? colors.green
+                  : colors.greengrey,
               },
             ]}
-            onPress={data.submittable ? ()=>onSubmitHandler() : {}}
+            onPress={data.submittable ? () => onSubmitHandler() : {}}
           >
             <Text
               style={[
@@ -234,14 +238,15 @@ const EditProfile = ({ route }) => {
               ]}
             >
               Submit
-              </Text>
+            </Text>
           </TouchableOpacity>
         </Animatable.View>
       </ImageBackground>
     </>
-  ) : <ActivityIndicator size="large" color={colors.green} />
-
-}
+  ) : (
+    <ActivityIndicator size="large" color={colors.green} />
+  );
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -260,7 +265,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 30,
     paddingHorizontal: 20,
     paddingVertical: 30,
-    bottom: 0
+    bottom: 0,
   },
   text_header: {
     color: colors.green,
@@ -322,5 +327,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
-export default EditProfile
+export default EditProfile;

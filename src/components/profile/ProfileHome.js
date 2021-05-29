@@ -1,5 +1,5 @@
 import React from "react";
-import { View, SafeAreaView, StyleSheet, AsyncStorage } from "react-native";
+import { View, SafeAreaView, StyleSheet } from "react-native";
 import {
   Avatar,
   Title,
@@ -9,64 +9,58 @@ import {
 } from "react-native-paper";
 
 import Layout from "../../screens/Layout";
-import Profile from './profile'
+import Profile from "./profile";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import colors from "../../assets/colors/colors";
 import axios from "../../data/axios";
-import {useNavigation} from '@react-navigation/native'
+import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProfileHome = (props) => {
+  const [userData, setUserData] = React.useState(
+    props.user !== null ? props.user : null
+  );
+  const [appointments, setAppointments] = React.useState(null);
 
-  const [userData, setUserData] = React.useState(props.user!==null?props.user:null)
-  const [appointments,setAppointments]=React.useState(null)
+  const navigation = useNavigation();
 
-  const navigation = useNavigation()
-
-  
-  React.useEffect(()=>{
+  React.useEffect(() => {
     AsyncStorage.getItem("@user_token")
-    .then(async (token) =>{
-    await axios.get("/user_appointment"+token)
-    .then(response=>{
-      setAppointments(response.data)
-    })
-    .catch(error=>{
-      Alert.alert(
-        "Appointment Fetching Error! ",
-        error
+      .then(async (token) => {
+        await axios
+          .get("/user_appointment" + token)
+          .then((response) => {
+            setAppointments(response.data);
+          })
+          .catch((error) => {
+            Alert.alert(
+              "Appointment Fetching Error! ",
+              error[{ text: "OK", onPress: () => console.log("OK Pressed") }]
+            );
+          });
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Token Fetching Error",
+          error[{ text: "OK", onPress: () => console.log("OK Pressed") }]
+        );
+      });
+  }, []);
 
-        [
-          { text: "OK", onPress: () => console.log("OK Pressed") }
-        ]
-      );
-    })
-    })
-    .catch(error=>{
-      Alert.alert(
-        "Token Fetching Error",
-        error
-
-        [
-          { text: "OK", onPress: () => console.log("OK Pressed") }
-        ]
-      );})
-  },[])
-
-  const logout = ()=>{
+  const logout = () => {
     AsyncStorage.removeItem("@user_token")
-    .then(() =>{
-    navigation.navigate("login")
-    })
-    .catch(error=>{
-      navigation.navigate("login")
-    })
-  }
+      .then(() => {
+        navigation.navigate("login");
+      })
+      .catch((error) => {
+        navigation.navigate("login");
+      });
+  };
 
   return (
     <>
       <SafeAreaView style={styles.container}>
-        
-        {userData!==null?<Profile data={userData}/>:null}
+        {userData !== null ? <Profile data={userData} /> : null}
         <View style={styles.infoBoxWrapper}>
           <View
             style={[
@@ -81,13 +75,17 @@ const ProfileHome = (props) => {
             <Caption>Wallet</Caption>
           </View>
           <View style={styles.infoBox}>
-            <Title>{appointments!==null?appointments.length:"..."}</Title>
+            <Title>{appointments !== null ? appointments.length : "..."}</Title>
             <Caption>Appontments</Caption>
           </View>
         </View>
 
         <View style={styles.menuWrapper}>
-          <TouchableRipple onPress={() => navigation.navigate({name:"profileedit",params:{userData}})}>
+          <TouchableRipple
+            onPress={() =>
+              navigation.navigate({ name: "profileedit", params: { userData } })
+            }
+          >
             <View style={styles.menuItem}>
               <Icon name="pen" color={colors.green} size={25} />
               <Text style={styles.menuItemText}>Edit Profile</Text>
@@ -99,7 +97,7 @@ const ProfileHome = (props) => {
               <Text style={styles.menuItemText}>Payment</Text>
             </View>
           </TouchableRipple>
-          <TouchableRipple onPress={()=>{}}>
+          <TouchableRipple onPress={() => {}}>
             <View style={styles.menuItem}>
               <Icon name="share-outline" color={colors.green} size={25} />
               <Text style={styles.menuItemText}>Tell Your Friends</Text>
