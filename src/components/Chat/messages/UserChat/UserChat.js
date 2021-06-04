@@ -5,7 +5,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import colors from "../../../../assets/colors/colors";
 import { user } from "../../../../assets/image/images";
 
-const UserChat = () => {
+const UserChat = ({route}) => {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {

@@ -94,14 +94,13 @@ const EditProfile = ({ route }) => {
         email: route.params.userData.email,
       });
     }
-
-    console.log(data.email);
   };
 
   const onSubmitHandler = () => {
     AsyncStorage.getItem("@user_token")
       .then(async (token) => {
-        axios_base.post("/editprofile" + token, { data }).then((response) => {
+        axios_base.post("/editprofile" + token, { data })
+        .then((response) => {
           if (response.data.success) {
             Alert.alert(
               "Data Posted Sucessfully",
@@ -111,13 +110,22 @@ const EditProfile = ({ route }) => {
             );
           } else {
             Alert.alert(
-              "Internet ErrorData not Posted",
+              "Internet Error Data not Posted",
               response.data.error,
 
               [{ text: "OK", onPress: () => console.log("OK Pressed") }]
             );
           }
-        });
+        })
+        .catch((error)=>{
+          Alert.alert(
+            "Internet Error Data not Posted",
+            error,
+
+            [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+          );
+        }
+      )
       })
       .catch((error) => {
         Alert.alert(
@@ -126,7 +134,7 @@ const EditProfile = ({ route }) => {
           [{ text: "OK", onPress: () => console.log("OK Pressed") }]
         );
       });
-  };
+  }
 
   return data ? (
     <>

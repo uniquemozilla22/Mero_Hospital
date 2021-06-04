@@ -21,7 +21,7 @@ const Widget = () => {
 
     useEffect(() => {
         fetchData()
-    }, [])
+    }, [data])
 
 
 

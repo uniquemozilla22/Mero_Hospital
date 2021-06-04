@@ -113,7 +113,6 @@ const SignInScreen = ({ navigation, route }) => {
             AsyncStorage.removeItem("@user_data");
             AsyncStorage.setItem("@user_token", success.token);
             AsyncStorage.setItem("@user_data", JSON.stringify(success));
-
             navigation.navigate({ name: "application" });
           } catch (e) {
             console.log(e);

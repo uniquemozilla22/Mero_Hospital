@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import * as Animatable from "react-native-animatable";
 import {
   Text,
@@ -8,16 +8,59 @@ import {
   StatusBar,
   ImageBackground,
   FlatList,
+  Alert
 } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
 import colors from "../../../../assets/colors/colors";
 import { useNavigation } from "@react-navigation/native";
 import axios_base from "../../../../data/axios";
+import DoctorItem from "./DoctorItem";
+import Heading from "./Heading.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const EditProfile = ({ route }) => {
   const navigation = useNavigation();
+  const [data,setData] = useState(null);
+  const [doctorList,setDoctorList] = useState([])
 
   const { title, source, categoryId } = route.params;
+
+  const fetchCategoryDoctors=async()=>{
+    await axios_base.get("/fetchdoctor"+categoryId)
+    .then((response)=>{
+      setData(response.data)
+    })
+    .catch((error)=>{
+      Alert.alert(
+        "No Internet Service! ",
+        "Server Errors:" + error[{ text: "OK", onPress: () => {} }]
+      );
+    })
+  }
+  
+
+  useEffect(() => {
+    AsyncStorage.getItem("@user_token")
+    .then(token=>{
+    data?postDoctorsList(token):fetchCategoryDoctors()
+
+    })
+    .catch((error)=>{
+      Alert.alert(
+        "Session not available try again",
+        "Login Again" + error[{ text: "OK", onPress: () => {} }]
+      );
+    })
+  },[data])
+
+  const postDoctorsList=(token)=>{
+    let display =[]
+    Object.keys(data).map((keys,value)=>{
+      display[value]=<DoctorItem key={keys} token ={token} data={data[keys]}/>
+    })
+    setDoctorList(display)
+  }
+
   return (
     <>
       <ImageBackground
@@ -43,7 +86,10 @@ const EditProfile = ({ route }) => {
               backgroundColor: colors.white,
             },
           ]}
-        ></Animatable.View>
+        >
+          <Heading/>
+          {doctorList}
+        </Animatable.View>
       </ImageBackground>
     </>
   );
