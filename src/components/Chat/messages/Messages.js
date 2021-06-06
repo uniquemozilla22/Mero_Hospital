@@ -7,7 +7,7 @@ const Stack = createStackNavigator();
 
 const Messages = () => {
   return (
-    <Stack.Navigator initialRouteName="Messages">
+    <Stack.Navigator initialRouteName="Messages" headerMode={"none"}>
       <Stack.Screen name="Messages" component={UserMessages} />
       <Stack.Screen
         name="chat"

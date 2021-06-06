@@ -25,6 +25,7 @@ const ChatCategory = () => {
           },
         }}
         style={{ backgroundColor: colors.grey }}
+        headerMode={"none"}
       >
         <Tab.Screen
           name="createchat"

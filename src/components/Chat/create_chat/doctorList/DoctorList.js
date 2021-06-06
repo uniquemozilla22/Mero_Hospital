@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import * as Animatable from "react-native-animatable";
 import {
   Text,
@@ -8,7 +8,8 @@ import {
   StatusBar,
   ImageBackground,
   FlatList,
-  Alert
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
 import colors from "../../../../assets/colors/colors";
@@ -20,46 +21,39 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const EditProfile = ({ route }) => {
   const navigation = useNavigation();
-  const [data,setData] = useState(null);
-  const [doctorList,setDoctorList] = useState([])
+  const [data, setData] = useState(null);
+  const [token, setToken] = useState(null);
 
   const { title, source, categoryId } = route.params;
 
-  const fetchCategoryDoctors=async()=>{
-    await axios_base.get("/fetchdoctor"+categoryId)
-    .then((response)=>{
-      setData(response.data)
-    })
-    .catch((error)=>{
-      Alert.alert(
-        "No Internet Service! ",
-        "Server Errors:" + error[{ text: "OK", onPress: () => {} }]
-      );
-    })
-  }
-  
+  const fetchCategoryDoctors = () => {
+    AsyncStorage.getItem("@user_token")
+      .then((token) => {
+        axios_base
+          .get("/fetchdoctor" + categoryId)
+          .then((response) => {
+            setToken(token);
+            setData(response.data);
+          })
+          .catch((error) => {
+            Alert.alert(
+              "No Internet Service! ",
+              "Server Errors:" + error[{ text: "OK", onPress: () => {} }]
+            );
+          });
+        console.log(data);
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Session not available try again",
+          "Login Again" + error[{ text: "OK", onPress: () => {} }]
+        );
+      });
+  };
 
   useEffect(() => {
-    AsyncStorage.getItem("@user_token")
-    .then(token=>{
-    data?postDoctorsList(token):fetchCategoryDoctors()
-
-    })
-    .catch((error)=>{
-      Alert.alert(
-        "Session not available try again",
-        "Login Again" + error[{ text: "OK", onPress: () => {} }]
-      );
-    })
-  },[data])
-
-  const postDoctorsList=(token)=>{
-    let display =[]
-    Object.keys(data).map((keys,value)=>{
-      display[value]=<DoctorItem key={keys} token ={token} data={data[keys]}/>
-    })
-    setDoctorList(display)
-  }
+    fetchCategoryDoctors();
+  }, []);
 
   return (
     <>
@@ -87,8 +81,14 @@ const EditProfile = ({ route }) => {
             },
           ]}
         >
-          <Heading/>
-          {doctorList}
+          <Heading />
+          {data ? (
+            Object.keys(data).map((keys, value) => 
+              <DoctorItem key={keys} token={token} data={data[keys]} />
+            )
+          ) : (
+            <ActivityIndicator size={"large"} />
+          )}
         </Animatable.View>
       </ImageBackground>
     </>
@@ -102,22 +102,26 @@ const styles = StyleSheet.create({
   },
 
   header: {
+    backgroundColor: "rgba(0,0,0,0.38)",
     flex: 1,
     paddingHorizontal: 10,
     top: 0,
   },
   footer: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.green,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingHorizontal: 10,
+    paddingVertical: 20,
     bottom: 0,
+    opacity:1
+
   },
   text_header: {
-    color: colors.black,
+    color: colors.greengrey,
     fontWeight: "bold",
     fontSize: 20,
+    paddingVertical: 10
   },
   text_header_message: {
     color: "#fff",

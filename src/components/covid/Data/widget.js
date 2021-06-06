@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View , Text} from 'react-native'
+import { StyleSheet, View , Text, ActivityIndicator} from 'react-native'
 import colors from '../../../assets/colors/colors';
 import Box from './widgetBox/Box';
 
@@ -21,7 +21,7 @@ const Widget = () => {
 
     useEffect(() => {
         fetchData()
-    }, [data])
+    }, [])
 
 
 
@@ -33,7 +33,7 @@ const Widget = () => {
 
             <Box title="Total Confirmed" today={data.today_newcase} total={data.positive} />
                 <Box title="Total Deaths" today={data.today_death} total={data.deaths} />
-                </> : <Text>Loading...</Text>}
+                </> : <ActivityIndicator size={"large"}/>}
         </View>
         <Text style={styles.date}>Updated at: {data !== null ?data.updated_at:"loading..."}</Text>
 

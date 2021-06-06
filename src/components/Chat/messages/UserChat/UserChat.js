@@ -1,42 +1,101 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View, ScrollView, Text, Button, StyleSheet } from "react-native";
+import {
+  View,
+  ScrollView,
+  Text,
+  Button,
+  StyleSheet,
+  Alert,
+} from "react-native";
 import { Bubble, GiftedChat, Send } from "react-native-gifted-chat";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import colors from "../../../../assets/colors/colors";
 import { user } from "../../../../assets/image/images";
+import ChatHeading from "./ChatHeading.js";
+import axios from "../../../../data/axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const UserChat = ({route}) => {
+const UserChat = ({ route }) => {
   const [messages, setMessages] = useState([]);
+  const [userId, setUserId] = useState(null);
+  const [userToken, setUserToken] = useState(null);
 
   useEffect(() => {
-    setMessages([
-      {
-        _id: 1,
-        text: "Hello developer",
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: "React Native",
-          avatar: "https://placeimg.com/140/140/any",
-        },
-      },
-      {
-        _id: 2,
-        text: "Hello world",
-        createdAt: new Date(),
-        user: {
-          _id: 1,
-          name: "React Native",
-          avatar: "https://placeimg.com/140/140/any",
-        },
-      },
-    ]);
-  }, []);
+    fetchUserId();
+    fetchUserToken();
+    fetchMessages();
+  }, [userToken]);
 
-  const onSend = useCallback((messages = []) => {
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, messages)
-    );
+  const fetchUserId = () => {
+    AsyncStorage.getItem("@user_id")
+      .then((id) => {
+        setUserId(id);
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Check your Internet! ",
+          "Login again" + error[{ text: "OK", onPress: () => {} }]
+        );
+      });
+  };
+
+  const fetchUserToken = () => {
+    AsyncStorage.getItem("@user_token")
+      .then((token) => {
+        setUserToken(token);
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Check your Internet! ",
+          "Login again could not get a valiid token" +
+            error[{ text: "OK", onPress: () => {} }]
+        );
+      });
+  };
+
+  const fetchMessages = () => {
+    axios.get("/getmessage" + route.params.roomId).then((response) => {
+      const meg = response.data?.map((keys, values) => {
+        let messagefetched = {
+          _id: keys._id,
+          text: keys.message,
+          createdAt: new Date(keys.timestamp),
+          user: {
+            _id: keys.user._id,
+            name: keys.user.name,
+            avatar: keys.user.DoctorId?.image,
+          },
+        };
+        return messagefetched;
+      });
+      setMessages(meg);
+    });
+  };
+
+  const onSend = useCallback((messages = [],token) => {
+    axios
+      .post("/newmessage" + token, {
+        message: messages[0].text,
+        room: route.params.roomId,
+      })
+      .then((response) => {
+        if (response.data === "success") {
+          setMessages((previousMessages) =>
+            GiftedChat.append(previousMessages, messages)
+          );
+        } else if (response.data === "error") {
+          Alert.alert("Server Error", "Server Posting Error", [
+            { text: "OK", onPress: () => {} },
+          ]);
+        }
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Internet Error",
+          "There is an error on posting your message login and try again",
+          [{ text: "OK", onPress: () => {} }]
+        );
+      });
   }, []);
 
   const renderSend = (props) => {
@@ -79,11 +138,12 @@ const UserChat = ({route}) => {
 
   return (
     <>
+      <ChatHeading topic={route.params.userName} />
       <GiftedChat
         messages={messages}
-        onSend={(message) => onSend(message)}
+        onSend={(message) => onSend(message,userToken)}
         user={{
-          _id: 1,
+          _id: userId,
         }}
         renderBubble={renderBubble}
         renderSend={renderSend}

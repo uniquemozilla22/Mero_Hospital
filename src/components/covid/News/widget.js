@@ -1,54 +1,47 @@
-import React, { useState } from 'react'
-import {ScrollView , StyleSheet, Alert, ToastAndroid} from 'react-native'
+import React, { useState } from "react";
+import { ScrollView, StyleSheet, Alert, ToastAndroid , ActivityIndicator} from "react-native";
 import axios from "axios";
-import Box from './Box/Box';
-import News from '../news.json'
+import Box from "./Box/Box";
 
-const WidgetNews=()=>{
+const WidgetNews = () => {
+  const [data, setData] = useState(null);
+  let [datadisplay, setDatadisplay] = useState([]);
 
-  const [data,setData] =useState(null)
-  let [datadisplay,setDatadisplay]=useState([])
+  const getData = () => {
+    axios
+      .get("https://corona.askbhunte.com/api/v1/news?limit=10")
+      .then((response) => {
+        setData(response.data.data);
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Fetching News error Not Registered! ",
+          "Server Errors:" + error[{ text: "OK", onPress: () => {} }]
+        );
+      });
+  };
 
-  const getData=()=>{
-    axios.get("https://corona.askbhunte.com/api/v1/news")
-    .then(response=>{
-      setData(response.data.data)
-    })
-    .catch(error=>{
-      setData(News.data)
-    })
-    }
+  React.useEffect(() => {
+    getData();
+  }, []);
 
+  return (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      style={styles.carousel}
+    >
+      {data?Object.keys(data).map((keys, value) => {
+        return <Box key={value} data={data[value]} />;
+      }):<ActivityIndicator size={"large"}/>}
+    </ScrollView>
+  );
+};
 
-    React.useEffect(()=>{
-      getData()
-      if(data!==null)
-      {
-        let display=Object.keys(data).map((keys,value)=>{
-          return <Box key={value} data={data[value]}/>
-        })
+const styles = StyleSheet.create({
+  carousel: {
+    flex: 1,
+  },
+});
 
-        setDatadisplay(display)
-      }
-    },[data])
-  
-
-
-
-
-    return(
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.carousel}>
-          {datadisplay}
-      </ScrollView>
-    )
-}
-
-
-const styles= StyleSheet.create({
-    carousel:{
-        flex: 1,
-    },
-})
-
-
-export default WidgetNews
+export default WidgetNews;

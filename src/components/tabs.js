@@ -11,6 +11,7 @@ import { Alert } from "react-native";
 import colors from "../assets/colors/colors";
 import axios_base from "../data/axios.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Layout from "../screens/Layout.js";
 
 const Tab = createBottomTabNavigator();
 
@@ -81,18 +82,26 @@ const tabs = ({ navigation, route }) => {
   };
 
   const userDetails = () => {
-    AsyncStorage.getItem("@user_token").then(async (token) => {
+    AsyncStorage.getItem("@user_token")
+    .then(async (token) => {
       await axios_base
         .get("/user_data" + token)
         .then((response) => {
           setUser(response.data);
         })
         .catch((error) => {
+          console.log(error)
           Alert.alert(
-            "User Data Fetching Error ",
+            "User Data Fetching Errors ",
             error[{ text: "OK", onPress: () => console.log("OK Pressed") }]
           );
         });
+    })
+    .catch(err=>{
+      Alert.alert(
+        "No Token Error",
+        error[{ text: "OK", onPress: () => console.log("OK Pressed") }]
+      );
     });
   };
 
@@ -136,7 +145,7 @@ const tabs = ({ navigation, route }) => {
 
       <Tab.Screen
         name={"Profile"}
-        children={() => <ProfileScreen user={user} />}
+        children={() => <ProfileScreen user={user} fetcherData={()=>userDetails} />}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Icons name="account-outline" color={color} size={size} />

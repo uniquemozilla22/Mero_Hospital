@@ -9,10 +9,13 @@ import colors from "../../../assets/colors/colors";
 
 const ChooseACategory = () => {
   const [dataCategory, setDataCategory] = React.useState(null);
-  const [cards, setCards] = useState();
+  const [cards, setCards] = useState([]);
 
   React.useEffect(() => {
     fetchCategoryData();
+    if (dataCategory) {
+      display(dataCategory);
+    }
   }, [cards]);
 
   const fetchCategoryData = () => {
@@ -20,7 +23,7 @@ const ChooseACategory = () => {
       .get("/categories")
       .then(({ data }) => {
         setDataCategory(data);
-        setCards(display(data));
+        console.log(data);
       })
       .catch((error) => {
         console.log(error);
@@ -41,14 +44,10 @@ const ChooseACategory = () => {
       );
     });
 
-    return cardings;
+    setCards(cardings);
   };
 
-  return dataCategory !== null ? (
-    <Layout cart={false}>{cards}</Layout>
-  ) : (
-    <ActivityIndicator size="large" color={colors.green} />
-  );
+  return <Layout fetcherData={()=>fetchCategoryData}>{cards}</Layout>;
 };
 
 export default ChooseACategory;
