@@ -14,6 +14,8 @@ import { user } from "../../../../assets/image/images";
 import ChatHeading from "./ChatHeading.js";
 import axios from "../../../../data/axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Pusher from 'pusher-js/react-native'
+import Icon from 'react-native-vector-icons/AntDesign'
 
 const UserChat = ({ route }) => {
   const [messages, setMessages] = useState([]);
@@ -25,6 +27,21 @@ const UserChat = ({ route }) => {
     fetchUserToken();
     fetchMessages();
   }, [userToken]);
+
+  useEffect(() =>{
+    const pusher = new Pusher('402af01c65c08ef73afd', {
+      cluster: 'ap2'
+    });
+    
+    const channel = pusher.subscribe('messages');
+    channel.bind('inserted', function(data) {
+      setMessages([data,...messages])
+    });
+    return ()=>{
+      channel.unbind_all()
+      channel.unsubscribe
+    }
+  },[messages])
 
   const fetchUserId = () => {
     AsyncStorage.getItem("@user_id")
@@ -133,7 +150,7 @@ const UserChat = ({ route }) => {
   };
 
   const scrollToBottomComponent = () => {
-    return <MaterialCommunityIcons name="down" size={22} color="#333" />;
+    return <Icon name="caretdown" size={20} color={colors.red}></Icon>
   };
 
   return (

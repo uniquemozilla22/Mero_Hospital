@@ -25,21 +25,26 @@ const ChoosrFeild = () => {
           [{ text: "OK", onPress: () => console.log("OK Pressed") }]
         );
       });
+
+      
   };
 
-  return  (
+  return (
     <Layout fetcherData={fetchData}>
       <Heading />
-      {categoryData?categoryData.map((keys, value) => 
-        <CategoryCard
-          key={categoryData[value]._id}
-          categoryId={categoryData[value]._id}
-          source={categoryData[value].image}
-          title={categoryData[value].name}
-          description={categoryData[value].description}
-        />
-      
-    ):<ActivityIndicator size={"large"}/>}
+      {categoryData ? (
+        categoryData.map((keys, value) => (
+          <CategoryCard
+            key={categoryData[value]._id}
+            categoryId={categoryData[value]._id}
+            source={categoryData[value].image}
+            title={categoryData[value].name}
+            description={categoryData[value].description}
+          />
+        ))
+      ) : (
+        <ActivityIndicator size={"large"} />
+      )}
     </Layout>
   );
 };

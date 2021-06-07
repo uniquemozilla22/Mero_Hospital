@@ -9,6 +9,7 @@ const createChat = () => {
   return (
     <Stack.Navigator initialRouteName="chooseFeild" headerMode={"none"}>
       <Stack.Screen name="chooseFeild" component={ChooseFeild} />
+      
       <Stack.Screen name="doctorlist" component={DoctorList} />
     </Stack.Navigator>
   );

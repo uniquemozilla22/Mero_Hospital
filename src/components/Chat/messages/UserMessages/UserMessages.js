@@ -39,7 +39,6 @@ const UserMessages = ({ navigation }) => {
           .get("/user_data" + token)
           .then((user) => {
             setMessages(user.data);
-            console.log(user.data)
             setisDoctor(user.data.isDoctor)
           })
           .catch((err) => console.log(err));

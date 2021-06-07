@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../../../screens/Layout";
 import * as Animatable from "react-native-animatable";
 import {
@@ -35,8 +35,13 @@ const EditProfile = ({ route }) => {
   const [nameEdit, setNameEdit] = useState("");
   const [emailEdit, setEmailEdit] = useState("");
 
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
   const nameInput = (val) => {
     setNameEdit(val);
+    setData({ ...data, name: val, errorName: null, submittable: true });
   };
 
   const emailInput = (val) => {
@@ -49,7 +54,7 @@ const EditProfile = ({ route }) => {
 
     if (validEmail) {
       setEmailEdit(val);
-      setData({ ...data, errorEmail: null });
+      setData({ ...data, email: val, errorEmail: null, submittable: true });
     } else {
       setData({ ...data, errorEmail: "Email Format not correct" });
     }
@@ -78,7 +83,12 @@ const EditProfile = ({ route }) => {
 
     if (validEmail) {
       setEmailEdit(val);
-      setData({ ...data, email: val, errorEmail: null, submittable: true });
+      setData({
+        ...data,
+        email: emailEdit,
+        errorEmail: null,
+        submittable: true,
+      });
     } else if (val === "") {
       setData({
         ...data,
@@ -99,33 +109,40 @@ const EditProfile = ({ route }) => {
   const onSubmitHandler = () => {
     AsyncStorage.getItem("@user_token")
       .then(async (token) => {
-        axios_base.post("/editprofile" + token, { data })
-        .then((response) => {
-          if (response.data.success) {
-            Alert.alert(
-              "Data Posted Sucessfully",
-              response.data.success,
+        const userInfo = data;
+        if (userInfo.name === "") {
+          userInfo.name = route.params.userData.name;
+        }
+        if (userInfo.email === "") {
+          userInfo.email = route.params.userData.email;
+        }
+        axios_base
+          .post("/editprofile" + token, { data })
+          .then((response) => {
+            if (response.data.success) {
+              Alert.alert(
+                "Data Posted Sucessfully",
+                response.data.success,
 
-              [{ text: "OK", onPress: () => console.log("OK Pressed") }]
-            );
-          } else {
+                [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+              );
+            } else {
+              Alert.alert(
+                "Internet Error Data not Posted",
+                response.data.error,
+
+                [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+              );
+            }
+          })
+          .catch((error) => {
             Alert.alert(
               "Internet Error Data not Posted",
-              response.data.error,
+              error,
 
               [{ text: "OK", onPress: () => console.log("OK Pressed") }]
             );
-          }
-        })
-        .catch((error)=>{
-          Alert.alert(
-            "Internet Error Data not Posted",
-            error,
-
-            [{ text: "OK", onPress: () => console.log("OK Pressed") }]
-          );
-        }
-      )
+          });
       })
       .catch((error) => {
         Alert.alert(
@@ -134,7 +151,7 @@ const EditProfile = ({ route }) => {
           [{ text: "OK", onPress: () => console.log("OK Pressed") }]
         );
       });
-  }
+  };
 
   return data ? (
     <>
@@ -220,11 +237,11 @@ const EditProfile = ({ route }) => {
               onEndEditing={(e) => handleEmailAddress(e.nativeEvent.text)}
             />
           </View>
-          {data.errorEmail ? null : (
+          {data.errorEmail ? (
             <Animatable.View animation="fadeInLeft" duration={500}>
               <Text style={styles.errorMsg}>{data.errorEmail}</Text>
             </Animatable.View>
-          )}
+          ) : null}
           <TouchableOpacity
             style={[
               styles.signIn,

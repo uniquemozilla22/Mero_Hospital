@@ -9,31 +9,36 @@ import {
 } from "react-native";
 import CategoryCard from "./FeildCard.js";
 import { DateTimePickerModal } from "react-native-paper-datetimepicker";
+import { DatePickerModal } from "react-native-paper-dates";
 import Layout from "../../../screens/Layout.js";
 import colors from "../../../assets/colors/colors.js";
 import Heading from "./Heading.js";
 import TitleHeading from "./TItleHeading.js";
 import axios from "../../../data/axios.js";
-import { List } from "react-native-paper";
+import { List, IconButton, ActivityIndicator } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AppointmentFrom = ({ navigation, route }) => {
   const { categoryId, source, title, description } = route.params;
 
   const [dates, setDates] = React.useState(new Date());
+  const [open, setOpen] = React.useState(false);
 
-  const [visible, setVisible] = React.useState(false);
   const [dateVisible, setDateVisible] = React.useState(false);
   const [UserFeildAppointment, setUserFeildAppointment] = React.useState(null);
-  const onDismiss = React.useCallback(() => {
-    setVisible(false);
-  }, [setVisible]);
+  const onDismissSingle = React.useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
 
-  const onChange = React.useCallback((date) => {
-    setVisible(false);
-    setDateVisible(true);
-    setDates(date);
-  }, []);
+  const onConfirmSingle = React.useCallback(
+    (params) => {
+      setOpen(false);
+      setDates(params.date);
+      setDateVisible(true);
+    },
+    [setOpen, setDates]
+  );
+
 
   React.useEffect(() => {
     getUserFeildAppointments();
@@ -47,25 +52,7 @@ const AppointmentFrom = ({ navigation, route }) => {
             params: { feild: categoryId },
           })
           .then((response) => {
-            let listOfAppointments = response.data.map((data) => {
-              return (
-                <List.Item
-                  key={data._id}
-                  title={"Date : " + data.date.split(",")[0]}
-                  description={data.date.split(",")[1]}
-                  right={(props) => (
-                    <List.Icon
-                      {...props}
-                      onPress={() => {}}
-                      icon="delete"
-                      color={colors.red}
-                    />
-                  )}
-                />
-              );
-            });
-
-            setUserFeildAppointment(listOfAppointments);
+            setUserFeildAppointment(response.data);
           })
           .catch((error) => {
             Alert.alert(
@@ -101,37 +88,93 @@ const AppointmentFrom = ({ navigation, route }) => {
                     " at time " +
                     dates.toLocaleString().split(",")[1].trim(),
 
-                  [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+                  [
+                    {
+                      text: "OK",
+                      onPress: () => {
+                        getUserFeildAppointments();
+                      },
+                    },
+                  ]
                 )
               : Alert.alert(
                   "Appointment Not Registered! ",
-                  "Data Error:" +
-                    error.toString()[
-                      { text: "OK", onPress: () => console.log("OK Pressed") }
-                    ]
+                  "" + error.toString(),
+                  [{ text: "OK", onPress: () => {} }]
                 );
           })
           .catch((error) => {
             console.log(error);
             Alert.alert(
               "Appointment Not Registered! ",
-              "Server Errors:" +
-                error[{ text: "OK", onPress: () => console.log("OK Pressed") }]
+              "Server Errors:" + error[{ text: "OK", onPress: () => {} }]
             );
           });
       })
       .catch((error) => {
         Alert.alert(
           "Appointment Not Registered! ",
-          "Token Error:" +
-            error[{ text: "OK", onPress: () => console.log("OK Pressed") }]
+          "Token Error:" + error[{ text: "OK", onPress: () => {} }]
         );
       });
   };
 
+  const deleteAppointment = async (appointment_id) => {
+    await AsyncStorage.getItem("@user_token")
+      .then((token) => {
+        axios
+          .post("/deleteappointment" + token, { appointment_id })
+          .then((response) => {
+            if (response.data === "success") {
+              Alert.alert(
+                "Appointment Removed! ",
+                "The Appointmenthas been removed",
+                [
+                  {
+                    text: "OK",
+                    onPress: () => {
+                      getUserFeildAppointments();
+                    },
+                  },
+                ]
+              );
+            } else {
+              Alert.alert(
+                "Appointment Not Removed! ",
+                "There is some error in the server. We will be right back",
+                [{ text: "OK", onPress: () => {} }]
+              );
+            }
+          })
+          .catch((error) => {
+            Alert.alert(
+              "Cannot Remove the Appointment",
+              "Check your Internet and Login again ." + error,
+              [{ text: "OK", onPress: () => {} }]
+            );
+          });
+      })
+      .catch((error) => {
+        Alert.alert("Appointment Not Registered! ", "Token Error:" + error, [
+          { text: "OK", onPress: () => {} },
+        ]);
+      });
+  };
+
+  const triggerAlert = (onOkCLick, id) => {
+    Alert.alert(
+      "Are You Sure?",
+      "You will not be given turn as it will be permanently removed",
+      [
+        { text: "OK", onPress: () => onOkCLick(id) },
+        { text: "cancel", onPress: () => {} },
+      ]
+    );
+  };
+
   return (
     <>
-      <Layout>
+      <Layout fetcherData={() => getUserFeildAppointments()}>
         <TitleHeading title={title} />
         <CategoryCard
           key={categoryId}
@@ -141,12 +184,15 @@ const AppointmentFrom = ({ navigation, route }) => {
           description={description}
         />
         <Heading />
-        <DateTimePickerModal
-          visible={visible}
-          onDismiss={onDismiss}
+        <DatePickerModal
+          mode="single"
+          visible={open}
+          onDismiss={onDismissSingle}
           date={dates}
-          onConfirm={onChange}
-          label="Pick A Date"
+          onConfirm={onConfirmSingle}
+          validRange={{
+            startDate: dates,
+          }}
         />
         {dateVisible ? (
           <>
@@ -164,9 +210,31 @@ const AppointmentFrom = ({ navigation, route }) => {
             </View>
           </>
         ) : null}
-        {UserFeildAppointment}
+        {UserFeildAppointment ? (
+          UserFeildAppointment.map((data) => {
+            return (
+              <List.Item
+                key={data._id}
+                title={"Date : " + data.date.split(",")[0]}
+                description={data.date.split(",")[1]}
+                right={(props) => (
+                  <IconButton
+                    {...props}
+                    onPress={() => {
+                      triggerAlert(deleteAppointment, data._id);
+                    }}
+                    icon="delete"
+                    color={colors.red}
+                  />
+                )}
+              />
+            );
+          })
+        ) : (
+          <ActivityIndicator size={"small"} />
+        )}
         <TouchableOpacity
-          onPress={() => setVisible(true)}
+          onPress={() => setOpen(true)}
           style={[
             styles.signIn,
             {
@@ -186,7 +254,7 @@ const AppointmentFrom = ({ navigation, route }) => {
               },
             ]}
           >
-            Set Date and Time
+            Set Date
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
