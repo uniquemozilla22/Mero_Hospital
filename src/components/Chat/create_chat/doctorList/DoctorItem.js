@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Alert } from "react-native";
+import { StyleSheet, Alert, Text } from "react-native";
 import {
   Avatar,
   Button,
@@ -62,12 +62,15 @@ const DoctorItem = ({ data, token }) => {
     <TouchableOpacity onPress={() => createChat()}>
       <Card style={styles.card}>
         <Card.Title
-          title={data.name}
+          style={styles.content}
+          title={<Text style={styles.content}>{data.name}</Text>}
           subtitle={
-            data.DoctorId.degree +
-            " with " +
-            data.DoctorId.experience +
-            " years of experience"
+            <Text style={styles.subcontent}>
+              {data.DoctorId.degree +
+                " with " +
+                data.DoctorId.experience +
+                " years of experience"}
+            </Text>
           }
           left={() => (
             <Avatar.Image size={45} source={{ uri: data.DoctorId.image }} />
@@ -90,6 +93,13 @@ const styles = StyleSheet.create({
   card: {
     marginVertical: 5,
     fontSize: 20,
+    backgroundColor: colors.white,
+  },
+  content: {
+    color: colors.black,
+  },
+  subcontent: {
+    color: colors.grey,
   },
 });
 

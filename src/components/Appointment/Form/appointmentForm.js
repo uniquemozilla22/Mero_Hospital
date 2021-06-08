@@ -39,7 +39,6 @@ const AppointmentFrom = ({ navigation, route }) => {
     [setOpen, setDates]
   );
 
-
   React.useEffect(() => {
     getUserFeildAppointments();
   }, []);
@@ -215,8 +214,16 @@ const AppointmentFrom = ({ navigation, route }) => {
             return (
               <List.Item
                 key={data._id}
-                title={"Date : " + data.date.split(",")[0]}
-                description={data.date.split(",")[1]}
+                title={
+                  <Text style={{ color: colors.black }}>
+                    {"Date : " + data.date.split(",")[0]}
+                  </Text>
+                }
+                description={
+                  <Text style={{ color: colors.grey }}>
+                    {data.date.split(",")[1]}
+                  </Text>
+                }
                 right={(props) => (
                   <IconButton
                     {...props}

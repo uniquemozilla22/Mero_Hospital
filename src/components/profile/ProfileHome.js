@@ -1,5 +1,5 @@
 import React from "react";
-import { View, SafeAreaView, StyleSheet , Alert} from "react-native";
+import { View, SafeAreaView, StyleSheet, Alert } from "react-native";
 import {
   Avatar,
   Title,
@@ -68,15 +68,40 @@ const ProfileHome = (props) => {
               {
                 borderRightColor: colors.greengrey,
                 borderRightWidth: 1,
+                color: colors.black,
               },
             ]}
           >
-            <Title>₹140.50</Title>
-            <Caption>Wallet</Caption>
+            <Title
+              style={{
+                color: colors.black,
+              }}
+            >
+              ₹140.50
+            </Title>
+            <Caption
+              style={{
+                color: colors.black,
+              }}
+            >
+              Wallet
+            </Caption>
           </View>
           <View style={styles.infoBox}>
-            <Title>{appointments !== null ? appointments.length : "..."}</Title>
-            <Caption>Appontments</Caption>
+            <Title
+              style={{
+                color: colors.black,
+              }}
+            >
+              {appointments !== null ? appointments.length : "..."}
+            </Title>
+            <Caption
+              style={{
+                color: colors.black,
+              }}
+            >
+              Appontments
+            </Caption>
           </View>
         </View>
 
@@ -160,6 +185,7 @@ const styles = StyleSheet.create({
     width: "50%",
     alignItems: "center",
     justifyContent: "center",
+    color: colors.black,
   },
   menuWrapper: {
     marginTop: 10,
