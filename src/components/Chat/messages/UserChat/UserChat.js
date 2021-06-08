@@ -14,8 +14,8 @@ import { user } from "../../../../assets/image/images";
 import ChatHeading from "./ChatHeading.js";
 import axios from "../../../../data/axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Pusher from 'pusher-js/react-native'
-import Icon from 'react-native-vector-icons/AntDesign'
+import Pusher from "pusher-js/react-native";
+import Icon from "react-native-vector-icons/AntDesign";
 
 const UserChat = ({ route }) => {
   const [messages, setMessages] = useState([]);
@@ -28,20 +28,20 @@ const UserChat = ({ route }) => {
     fetchMessages();
   }, [userToken]);
 
-  useEffect(() =>{
-    const pusher = new Pusher('402af01c65c08ef73afd', {
-      cluster: 'ap2'
+  useEffect(() => {
+    const pusher = new Pusher("402af01c65c08ef73afd", {
+      cluster: "ap2",
     });
-    
-    const channel = pusher.subscribe('messages');
-    channel.bind('inserted', function(data) {
-      setMessages([data,...messages])
+
+    const channel = pusher.subscribe("messages");
+    channel.bind("inserted", function (data) {
+      setMessages([data, ...messages]);
     });
-    return ()=>{
-      channel.unbind_all()
-      channel.unsubscribe
-    }
-  },[messages])
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+    };
+  }, [messages]);
 
   const fetchUserId = () => {
     AsyncStorage.getItem("@user_id")
@@ -89,18 +89,19 @@ const UserChat = ({ route }) => {
     });
   };
 
-  const onSend = useCallback((messages = [],token) => {
+  const onSend = useCallback((messages = [], token) => {
     axios
       .post("/newmessage" + token, {
         message: messages[0].text,
         room: route.params.roomId,
       })
       .then((response) => {
-        if (response.data === "success") {
-          setMessages((previousMessages) =>
-            GiftedChat.append(previousMessages, messages)
-          );
-        } else if (response.data === "error") {
+        // if (response.data === "success") {
+        //   setMessages((previousMessages) =>
+        //     GiftedChat.append(previousMessages, messages)
+        //   );
+        // } else
+        if (response.data === "error") {
           Alert.alert("Server Error", "Server Posting Error", [
             { text: "OK", onPress: () => {} },
           ]);
@@ -150,7 +151,7 @@ const UserChat = ({ route }) => {
   };
 
   const scrollToBottomComponent = () => {
-    return <Icon name="caretdown" size={20} color={colors.red}></Icon>
+    return <Icon name="caretdown" size={20} color={colors.red}></Icon>;
   };
 
   return (
@@ -158,7 +159,7 @@ const UserChat = ({ route }) => {
       <ChatHeading topic={route.params.userName} />
       <GiftedChat
         messages={messages}
-        onSend={(message) => onSend(message,userToken)}
+        onSend={(message) => onSend(message, userToken)}
         user={{
           _id: userId,
         }}

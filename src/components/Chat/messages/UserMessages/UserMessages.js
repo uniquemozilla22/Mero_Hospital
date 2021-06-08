@@ -26,7 +26,7 @@ import Greet from "./Boxheading";
 
 const UserMessages = ({ navigation }) => {
   const [messages, setMessages] = useState(null);
-  const [isDoctor,setisDoctor]=useState(false)
+  const [isDoctor, setisDoctor] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -34,12 +34,12 @@ const UserMessages = ({ navigation }) => {
 
   const fetchData = () => {
     AsyncStorage.getItem("@user_token")
-      .then(async(token) => {
+      .then(async (token) => {
         await axios_base
           .get("/user_data" + token)
           .then((user) => {
             setMessages(user.data);
-            setisDoctor(user.data.isDoctor)
+            setisDoctor(user.data.isDoctor);
           })
           .catch((err) => console.log(err));
       })
@@ -59,7 +59,9 @@ const UserMessages = ({ navigation }) => {
             renderItem={({ item }) => (
               <Renderer
                 id={item._id}
-                participant={item.participants[isDoctor?0:1]}
+                participant={
+                  item.participants ? item.participants[isDoctor ? 0 : 1] : null
+                }
                 name={item.name}
                 navigation={navigation}
                 isDoctor={isDoctor}
@@ -72,21 +74,28 @@ const UserMessages = ({ navigation }) => {
   );
 };
 
-const Renderer = ({ id, participant, name, navigation , isDoctor}) => {
+const Renderer = ({ id, participant, name, navigation, isDoctor }) => {
   return (
     <Card
       onPress={() => {
-        navigation.navigate("chat", { userName: participant.name, roomId: id });
+        navigation.navigate("chat", {
+          userName: participant?.name,
+          roomId: id,
+        });
       }}
     >
       <UserInfo>
-        {isDoctor?null:<UserImgWrapper>
-          <UserImg source={{ uri: participant.DoctorId.image }}></UserImg>
-        </UserImgWrapper>}
+        {isDoctor ? null : (
+          <UserImgWrapper>
+            <UserImg source={{ uri: participant?.DoctorId.image }}></UserImg>
+          </UserImgWrapper>
+        )}
         <TextSection>
           <UserInfoText>
-            <UserName>{participant.name}</UserName>
-            {isDoctor?null:<PostTime>{participant.DoctorId.degree}</PostTime>}
+            <UserName>{participant?.name}</UserName>
+            {isDoctor ? null : (
+              <PostTime>{participant?.DoctorId.degree}</PostTime>
+            )}
           </UserInfoText>
           <MessageText>{name}</MessageText>
         </TextSection>

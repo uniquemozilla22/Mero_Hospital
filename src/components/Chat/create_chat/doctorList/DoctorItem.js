@@ -1,12 +1,20 @@
 import React from "react";
 import { StyleSheet, Alert } from "react-native";
-import { Avatar, Button, Card, Title, Paragraph, IconButton } from "react-native-paper";
+import {
+  Avatar,
+  Button,
+  Card,
+  Title,
+  Paragraph,
+  IconButton,
+} from "react-native-paper";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import axios_base from "../../../../data/axios";
 import { useNavigation } from "@react-navigation/native";
 import colors from "../../../../assets/colors/colors";
 
 const DoctorItem = ({ data, token }) => {
+  console.log(data);
   const navigation = useNavigation();
   const createChat = () => {
     axios_base
@@ -61,8 +69,17 @@ const DoctorItem = ({ data, token }) => {
             data.DoctorId.experience +
             " years of experience"
           }
-          left={() => <Avatar.Image size={45} source={{uri:data.DoctorId.image}}/>}
-          right={() => <IconButton color={colors.red} size={20} icon="chat-outline" onPress={() => createChat()} />}
+          left={() => (
+            <Avatar.Image size={45} source={{ uri: data.DoctorId.image }} />
+          )}
+          right={() => (
+            <IconButton
+              color={colors.red}
+              size={20}
+              icon="chat-outline"
+              onPress={() => createChat()}
+            />
+          )}
         />
       </Card>
     </TouchableOpacity>
