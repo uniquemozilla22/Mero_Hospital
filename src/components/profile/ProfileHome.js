@@ -1,5 +1,11 @@
 import React from "react";
-import { View, SafeAreaView, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  SafeAreaView,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 import {
   Avatar,
   Title,
@@ -45,7 +51,7 @@ const ProfileHome = (props) => {
           error[{ text: "OK", onPress: () => console.log("OK Pressed") }]
         );
       });
-  }, []);
+  }, [appointments]);
 
   const logout = () => {
     AsyncStorage.removeItem("@user_token")
@@ -88,20 +94,26 @@ const ProfileHome = (props) => {
             </Caption>
           </View>
           <View style={styles.infoBox}>
-            <Title
-              style={{
-                color: colors.black,
-              }}
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("appointmentlist", { appointments })
+              }
             >
-              {appointments !== null ? appointments.length : "..."}
-            </Title>
-            <Caption
-              style={{
-                color: colors.black,
-              }}
-            >
-              Appontments
-            </Caption>
+              <Title
+                style={{
+                  color: colors.black,
+                }}
+              >
+                {appointments !== null ? appointments.length : "..."}
+              </Title>
+              <Caption
+                style={{
+                  color: colors.black,
+                }}
+              >
+                {"Appontments"}
+              </Caption>
+            </TouchableOpacity>
           </View>
         </View>
 

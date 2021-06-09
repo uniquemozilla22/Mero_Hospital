@@ -5,10 +5,13 @@ import UserChat from "./UserChat/UserChat";
 
 const Stack = createStackNavigator();
 
-const Messages = () => {
+const Messages = (props) => {
   return (
     <Stack.Navigator initialRouteName="Messages" headerMode={"none"}>
-      <Stack.Screen name="Messages" component={UserMessages} />
+      <Stack.Screen
+        name="Messages"
+        children={() => <UserMessages {...props} />}
+      />
       <Stack.Screen
         name="chat"
         component={UserChat}

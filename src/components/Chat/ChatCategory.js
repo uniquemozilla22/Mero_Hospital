@@ -7,10 +7,31 @@ import colors from "../../assets/colors/colors";
 import Icons from "react-native-vector-icons/MaterialCommunityIcons";
 import { StyleSheet, View } from "react-native";
 import Messages from "./messages/Messages";
+import { createStackNavigator } from "@react-navigation/stack";
 
 const Tab = createMaterialTopTabNavigator();
-const ChatCategory = () => {
-  return (
+const Stack = createStackNavigator();
+const ChatCategory = ({ user }) => {
+  return user.isDoctor ? (
+    <Stack.Navigator
+      initialRouteName="createchat"
+      tabBarOptions={{
+        activeTintColor: colors.black,
+        inactiveTintColor: colors.greengrey,
+        style: {
+          backgroundColor: colors.white,
+          borderColor: colors.white,
+        },
+      }}
+      style={{ backgroundColor: colors.grey }}
+      headerMode={"none"}
+    >
+      <Stack.Screen
+        name="Messages"
+        children={<Messages isDoctor={user.isDoctor} />}
+      />
+    </Stack.Navigator>
+  ) : (
     <>
       <Tab.Navigator
         initialRouteName="createchat"
@@ -37,9 +58,10 @@ const ChatCategory = () => {
             ),
           }}
         />
+
         <Tab.Screen
           name="Messages"
-          component={Messages}
+          children={() => <Messages isDoctor={user.isDoctor} />}
           options={{
             tabBarLabel: "Messages",
             tabBarIcon: ({ color, size }) => (

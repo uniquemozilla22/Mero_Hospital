@@ -83,26 +83,26 @@ const tabs = ({ navigation, route }) => {
 
   const userDetails = () => {
     AsyncStorage.getItem("@user_token")
-    .then(async (token) => {
-      await axios_base
-        .get("/user_data" + token)
-        .then((response) => {
-          setUser(response.data);
-        })
-        .catch((error) => {
-          console.log(error)
-          Alert.alert(
-            "User Data Fetching Errors ",
-            error[{ text: "OK", onPress: () => console.log("OK Pressed") }]
-          );
-        });
-    })
-    .catch(err=>{
-      Alert.alert(
-        "No Token Error",
-        error[{ text: "OK", onPress: () => console.log("OK Pressed") }]
-      );
-    });
+      .then(async (token) => {
+        await axios_base
+          .get("/user_data" + token)
+          .then((response) => {
+            setUser(response.data);
+          })
+          .catch((error) => {
+            console.log(error);
+            Alert.alert(
+              "User Data Fetching Errors ",
+              error[{ text: "OK", onPress: () => console.log("OK Pressed") }]
+            );
+          });
+      })
+      .catch((err) => {
+        Alert.alert(
+          "No Token Error",
+          error[{ text: "OK", onPress: () => console.log("OK Pressed") }]
+        );
+      });
   };
 
   return (
@@ -116,6 +116,7 @@ const tabs = ({ navigation, route }) => {
           <HomeScreen
             city={city !== null ? city : "Loading..."}
             name={user !== null ? user.name : "loading..."}
+            isDoctor={user !== null ? user.isDoctor : false}
           />
         )}
         options={{
@@ -135,7 +136,7 @@ const tabs = ({ navigation, route }) => {
       />
       <Tab.Screen
         name={"Chat"}
-        component={IntroScreen}
+        children={() => <IntroScreen user={user} />}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Icons name="message-outline" color={color} size={size} />
@@ -145,7 +146,9 @@ const tabs = ({ navigation, route }) => {
 
       <Tab.Screen
         name={"Profile"}
-        children={() => <ProfileScreen user={user} fetcherData={()=>userDetails} />}
+        children={() => (
+          <ProfileScreen user={user} fetcherData={() => userDetails} />
+        )}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Icons name="account-outline" color={color} size={size} />

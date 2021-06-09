@@ -1,6 +1,6 @@
 import React from "react";
-import 'intl'
-import 'intl/locale-data/jsonp/en'; 
+import "intl";
+import "intl/locale-data/jsonp/en";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Tabs from "./src/components/tabs";
@@ -13,9 +13,9 @@ const App = () => {
   return (
     <NavigationContainer>
       <PaperProvider>
-        <Stack.Navigator initialRouteName={"application"} headerMode={"none"}>
+        <Stack.Navigator initialRouteName={"login"} headerMode={"none"}>
           <Stack.Screen name="application" component={Tabs} />
-          <Stack.Screen name="login" component={LoginScreen}/>
+          <Stack.Screen name="login" component={LoginScreen} />
           <Stack.Screen name="signup" component={SignUpScreen} />
         </Stack.Navigator>
       </PaperProvider>

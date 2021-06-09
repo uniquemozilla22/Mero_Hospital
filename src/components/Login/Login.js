@@ -9,6 +9,7 @@ import {
   StatusBar,
   Alert,
   ScrollView,
+  Image,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -17,6 +18,7 @@ import colors from "../../assets/colors/colors";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Axios from "../../data/axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { logo } from "../../assets/image/images";
 
 const SignInScreen = ({ navigation, route }) => {
   const [data, setData] = React.useState({
@@ -287,7 +289,7 @@ const SignInScreen = ({ navigation, route }) => {
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
               <Text style={{ color: colors.grey, marginVertical: 15 }}>
                 Use Alternatives
               </Text>
@@ -340,6 +342,7 @@ const SignInScreen = ({ navigation, route }) => {
                 </Text>
               </TouchableOpacity>
             </ScrollView>
+           */}
           </View>
         </Animatable.View>
       </View>
@@ -354,19 +357,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.green,
   },
+
   header: {
     flex: 1,
     justifyContent: "flex-end",
     paddingHorizontal: 20,
-    paddingBottom: 50,
+    paddingBottom: 30,
   },
   footer: {
-    flex: 3,
+    flex: 2,
     backgroundColor: "#fff",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingHorizontal: 20,
     paddingVertical: 30,
+    bottom: 0,
   },
   text_header: {
     color: "#fff",

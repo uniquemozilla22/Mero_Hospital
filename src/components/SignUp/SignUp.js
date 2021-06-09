@@ -3,13 +3,13 @@ import {
   View,
   Text,
   TouchableOpacity,
-  TextInput,  
+  TextInput,
   Platform,
   StyleSheet,
   StatusBar,
   ScrollView,
 } from "react-native";
-import Axios from '../../data/axios'
+import Axios from "../../data/axios";
 import * as Animatable from "react-native-animatable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
@@ -17,103 +17,125 @@ import colors from "../../assets/colors/colors";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 const SignUpScreen = ({ navigation }) => {
-
   const [data, setData] = React.useState({
     username: "",
     password: "",
-    email:"",
-    name:"",
+    email: "",
+    name: "",
     check_textInputChange: false,
     secureTextEntry: true,
     isValidUser: true,
     isValidPassword: true,
-    isValidEmail:false,
-    errorMessagePw:null,
-    errorMessageEmail:null,
-    registerMessage:null,
-    userMessage:null
+    isValidEmail: false,
+    errorMessagePw: null,
+    errorMessageEmail: null,
+    registerMessage: null,
+    userMessage: null,
   });
 
   const textInputChange = (val) => {
-    setData({...data,username:val})
+    setData({ ...data, username: val });
   };
 
-  const inputChangeName=(val)=>{
-      setData({...data,name:val})
-  }
-  
+  const inputChangeName = (val) => {
+    setData({ ...data, name: val });
+  };
 
   const handlePasswordChange = (val) => {
-    const hasNumber = /\d/.test(val)?true : false
-    const hasSixCharacters = val.length>=6?true : false
-    if(hasNumber && hasSixCharacters)
-    {
-      setData({...data,isValidPassword:true,password:val,errorMessagePw:null})
+    const hasNumber = /\d/.test(val) ? true : false;
+    const hasSixCharacters = val.length >= 6 ? true : false;
+    if (hasNumber && hasSixCharacters) {
+      setData({
+        ...data,
+        isValidPassword: true,
+        password: val,
+        errorMessagePw: null,
+      });
+    } else {
+      setData({
+        ...data,
+        isValidPassword: false,
+        errorMessagePw:
+          "Password must have at least 6 letters including numbers",
+      });
     }
-    else{
-      setData({...data,isValidPassword:false,errorMessagePw:"Password must have at least 6 letters including numbers"})
-    } 
   };
-
-
 
   const updateSecureTextEntry = () => {
-    setData({...data,secureTextEntry:!data.secureTextEntry})
-
+    setData({ ...data, secureTextEntry: !data.secureTextEntry });
   };
-  const handleEmailAddress =(val) =>{
-    const validEmail= /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(val)?true : false
+  const handleEmailAddress = (val) => {
+    const validEmail =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+        val
+      )
+        ? true
+        : false;
 
-    if(validEmail)
-    {
-      setData({...data,isValidEmail:true,errorMessageEmail:null, email:val})
-
+    if (validEmail) {
+      setData({
+        ...data,
+        isValidEmail: true,
+        errorMessageEmail: null,
+        email: val,
+      });
+    } else {
+      setData({
+        ...data,
+        isValidEmail: false,
+        errorMessageEmail: "The email Format is incorrect",
+      });
     }
-    else{
-      setData({...data,isValidEmail:false,errorMessageEmail:"The email Format is incorrect"})
-    }
-
-  }
+  };
 
   const handleValidUser = (val) => {
-    const hasSixCharacters = val.length>=6?true : false
+    const hasSixCharacters = val.length >= 6 ? true : false;
 
-    if(hasSixCharacters)
-    {
-      setData({...data,isValidUser:true,userMessage:null})
-    }
-    else{
-      setData({...data,isValidUser:false,userMessage:"Username must be of 6 characters"})
-
-    }
-
-  };
-
-  const registerHandle =  (username, password,email,name) => {
-    if(username!=="" && password!=="" && name!==""&& email!=="" && data.isValidUser && data.isValidPassword && data.isValidEmail)
-    {
-      PostData(username , password , email,name)
-    }
-    else{
-      setData({...data,registerMessage:"The registration forms are not complete"})
+    if (hasSixCharacters) {
+      setData({ ...data, isValidUser: true, userMessage: null });
+    } else {
+      setData({
+        ...data,
+        isValidUser: false,
+        userMessage: "Username must be of 6 characters",
+      });
     }
   };
-  const PostData = (username , password , email , name)=>{
-    setData({...data,registerMessage:null})
-     Axios.post("/register",{username,password,email,name})
-    .then(response => {
-      setData({...data,registerMessage:null})
-      if(response.data)
-      {
-        navigation.navigate({name:"login",params:{registerMessage:response.data}})
-      }
-    })
-    .catch(err=>{
-      setData({...data,registerMessage:("err"+err)})
 
-    })
-    
-  } 
+  const registerHandle = (username, password, email, name) => {
+    if (
+      username !== "" &&
+      password !== "" &&
+      name !== "" &&
+      email !== "" &&
+      data.isValidUser &&
+      data.isValidPassword &&
+      data.isValidEmail
+    ) {
+      PostData(username, password, email, name);
+    } else {
+      setData({
+        ...data,
+        registerMessage: "The registration forms are not complete",
+      });
+    }
+  };
+  const PostData = (username, password, email, name) => {
+    setData({ ...data, registerMessage: null });
+    Axios.post("/register", { username, password, email, name })
+      .then((response) => {
+        setData({ ...data, registerMessage: null });
+        if (response.data) {
+          navigation.navigate({
+            name: "login",
+            params: { registerMessage: response.data },
+          });
+        }
+      })
+      .catch((err) => {
+        setData({ ...data, registerMessage: "err" + err });
+      });
+  };
   return (
     <>
       <ScrollView style={styles.container}>
@@ -163,12 +185,10 @@ const SignUpScreen = ({ navigation }) => {
           </View>
           {data.isValidUser ? null : (
             <Animatable.View animation="fadeInLeft" duration={500}>
-              <Text style={styles.errorMsg}>
-                {data.userMessage}
-              </Text>
+              <Text style={styles.errorMsg}>{data.userMessage}</Text>
             </Animatable.View>
           )}
-<Text
+          <Text
             style={[
               styles.text_footer,
               {
@@ -231,12 +251,10 @@ const SignUpScreen = ({ navigation }) => {
           </View>
           {data.isValidPassword ? null : (
             <Animatable.View animation="fadeInLeft" duration={500}>
-              <Text style={styles.errorMsg}>
-                {data.errorMessagePw}
-              </Text>
+              <Text style={styles.errorMsg}>{data.errorMessagePw}</Text>
             </Animatable.View>
           )}
-         
+
           <Text
             style={[
               styles.text_footer,
@@ -251,7 +269,6 @@ const SignUpScreen = ({ navigation }) => {
           <View style={styles.action}>
             <Feather name="mail" color={colors.green} size={20} />
             <TextInput
-              
               placeholder="Your Email"
               keyboardType="email-address"
               autoCompleteType="email"
@@ -275,11 +292,11 @@ const SignUpScreen = ({ navigation }) => {
               <Text style={styles.errorMsg}>{data.errorMessageEmail}</Text>
             </Animatable.View>
           )}
-          {data.registerMessage ?  (
+          {data.registerMessage ? (
             <Animatable.View animation="fadeInLeft" duration={500}>
               <Text style={styles.errorMsg}>{data.registerMessage}</Text>
             </Animatable.View>
-          ):null}
+          ) : null}
           <View style={styles.button}>
             <TouchableOpacity
               style={[
@@ -289,7 +306,12 @@ const SignUpScreen = ({ navigation }) => {
                 },
               ]}
               onPress={() => {
-                registerHandle(data.username, data.password, data.email,data.name);
+                registerHandle(
+                  data.username,
+                  data.password,
+                  data.email,
+                  data.name
+                );
               }}
             >
               <Text
@@ -306,7 +328,7 @@ const SignUpScreen = ({ navigation }) => {
 
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("login")
+                navigation.navigate("login");
               }}
               style={[
                 styles.signIn,
@@ -330,7 +352,7 @@ const SignUpScreen = ({ navigation }) => {
                 Sign In
               </Text>
             </TouchableOpacity>
-
+            {/* 
             <TouchableOpacity>
               <Text style={{ color: colors.grey, marginVertical: 15 }}>
                 Use Alternatives
@@ -384,6 +406,7 @@ const SignUpScreen = ({ navigation }) => {
                 </Text>
               </TouchableOpacity>
             </ScrollView>
+           */}
           </View>
         </Animatable.View>
       </ScrollView>
@@ -398,19 +421,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.green,
   },
+
   header: {
     flex: 1,
     justifyContent: "flex-end",
     paddingHorizontal: 20,
-    paddingBottom: 50,
+    paddingBottom: 130,
   },
   footer: {
-    flex: 3,
+    flex: 1,
     backgroundColor: "#fff",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingHorizontal: 20,
     paddingVertical: 30,
+    bottom: 0,
   },
   text_header: {
     color: "#fff",

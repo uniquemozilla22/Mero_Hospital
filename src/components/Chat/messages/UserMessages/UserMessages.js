@@ -23,10 +23,13 @@ import axios_base from "../../../../data/axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Layout from "../../../../screens/Layout.js";
 import Greet from "./Boxheading";
-
-const UserMessages = ({ navigation }) => {
+import { useNavigation } from "@react-navigation/native";
+import { IconButton } from "react-native-paper";
+import colors from "../../../../assets/colors/colors";
+const UserMessages = (props) => {
   const [messages, setMessages] = useState(null);
-  const [isDoctor, setisDoctor] = useState(false);
+  const [isDoctor, setisDoctor] = useState(props.isDoctor);
+  const navigation = useNavigation();
 
   useEffect(() => {
     fetchData();
@@ -39,7 +42,6 @@ const UserMessages = ({ navigation }) => {
           .get("/user_data" + token)
           .then((user) => {
             setMessages(user.data);
-            setisDoctor(user.data.isDoctor);
           })
           .catch((err) => console.log(err));
       })

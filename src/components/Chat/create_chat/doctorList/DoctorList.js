@@ -83,9 +83,9 @@ const EditProfile = ({ route }) => {
         >
           <Heading />
           {data ? (
-            Object.keys(data).map((keys, value) => 
+            Object.keys(data).map((keys, value) => (
               <DoctorItem key={keys} token={token} data={data[keys]} />
-            )
+            ))
           ) : (
             <ActivityIndicator size={"large"} />
           )}
@@ -114,14 +114,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 20,
     bottom: 0,
-    opacity:1
-
+    opacity: 1,
+    minHeight: 300,
   },
   text_header: {
     color: colors.greengrey,
     fontWeight: "bold",
     fontSize: 20,
-    paddingVertical: 10
+    paddingVertical: 10,
   },
   text_header_message: {
     color: "#fff",

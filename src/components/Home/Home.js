@@ -15,7 +15,7 @@ const Home = (props) => {
     <Layout>
       <TopBar location={props.city} />
       <Greet user={props.name} />
-      <ContentHome Messages={Messages} />
+      <ContentHome Messages={Messages} isDoctor={props.isDoctor} />
     </Layout>
   );
 };

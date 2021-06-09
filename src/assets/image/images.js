@@ -5,6 +5,7 @@ const SETTINGS = require("./icons/settings.svg");
 const CART = require("./icons/shopping-cart.svg");
 const USER = require("./icons/user.svg");
 const people_wearing_masks = require("./main_images/people_with_masks.jpg");
+const logo = require("./main_images/logo.png");
 
 module.exports = {
   home: HOME,
@@ -14,4 +15,5 @@ module.exports = {
   cart: CART,
   user: USER,
   bg1: people_wearing_masks,
+  logo,
 };

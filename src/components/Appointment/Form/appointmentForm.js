@@ -211,7 +211,7 @@ const AppointmentFrom = ({ navigation, route }) => {
         ) : null}
         {UserFeildAppointment ? (
           UserFeildAppointment.map((data) => {
-            return (
+            return new Date(data.date) >= new Date() ? (
               <List.Item
                 key={data._id}
                 title={
@@ -235,7 +235,7 @@ const AppointmentFrom = ({ navigation, route }) => {
                   />
                 )}
               />
-            );
+            ) : null;
           })
         ) : (
           <ActivityIndicator size={"small"} />
