@@ -11,12 +11,23 @@ const Profile = ({ data }) => {
     <>
       <View style={styles.userInfoSection}>
         <View style={{ flexDirection: "row", marginTop: 15 }}>
-          <Avatar.Image
-            source={{
-              uri: "https://api.adorable.io/avatars/80/abott@adorable.png",
-            }}
-            size={80}
-          />
+          {data.DoctorId?.image ? (
+            <Avatar.Image
+              source={{
+                uri: data.DoctorId.image,
+              }}
+              size={80}
+            />
+          ) : (
+            <Avatar.Text
+              label={
+                data.name[0].toUpperCase() +
+                "" +
+                data.name.split(" ")[1][0].toUpperCase()
+              }
+              size={80}
+            />
+          )}
           <View style={{ marginLeft: 20 }}>
             <Title
               style={[

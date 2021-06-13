@@ -10,15 +10,7 @@ import {
 import Layout from "../../../screens/Layout";
 import AppointmentHeading from "./AppointmentHeading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  Avatar,
-  Card,
-  Title,
-  Subheading,
-  IconButton,
-} from "react-native-paper";
 import colors from "../../../assets/colors/colors";
-import AntDesign from "react-native-vector-icons/AntDesign";
 import { Modalize } from "react-native-modalize";
 import SingleAppointment from "./singleprofile.js";
 import axios from "../../../data/axios.js";

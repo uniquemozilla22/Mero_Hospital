@@ -7,14 +7,12 @@ import {
   Platform,
   StyleSheet,
   StatusBar,
-  ScrollView,
 } from "react-native";
 import Axios from "../../data/axios";
 import * as Animatable from "react-native-animatable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
 import colors from "../../assets/colors/colors";
-import Icon from "react-native-vector-icons/FontAwesome";
 
 const SignUpScreen = ({ navigation }) => {
   const [data, setData] = React.useState({
@@ -22,11 +20,15 @@ const SignUpScreen = ({ navigation }) => {
     password: "",
     email: "",
     name: "",
+    address: "",
+    phone: "",
     check_textInputChange: false,
     secureTextEntry: true,
     isValidUser: true,
     isValidPassword: true,
     isValidEmail: false,
+    isValidPhone: false,
+    errorMessagePhone: null,
     errorMessagePw: null,
     errorMessageEmail: null,
     registerMessage: null,
@@ -39,6 +41,27 @@ const SignUpScreen = ({ navigation }) => {
 
   const inputChangeName = (val) => {
     setData({ ...data, name: val });
+  };
+
+  const InputaddressChange = (val) => {
+    setData({ ...data, address: val });
+  };
+
+  const handlePhoneChange = (val) => {
+    if (val.length !== 10) {
+      setData({
+        ...data,
+        isValidPhone: false,
+        errorMessagePhone: "Not a Valid Phone Number",
+      });
+    } else {
+      setData({
+        ...data,
+        phone: val,
+        isValidPhone: true,
+        errorMessagePhone: null,
+      });
+    }
   };
 
   const handlePasswordChange = (val) => {
@@ -102,17 +125,20 @@ const SignUpScreen = ({ navigation }) => {
     }
   };
 
-  const registerHandle = (username, password, email, name) => {
+  const registerHandle = (username, password, email, name, address, phone) => {
     if (
       username !== "" &&
       password !== "" &&
       name !== "" &&
       email !== "" &&
+      address !== "" &&
+      phone !== "" &&
       data.isValidUser &&
       data.isValidPassword &&
-      data.isValidEmail
+      data.isValidEmail &&
+      data.isValidPhone
     ) {
-      PostData(username, password, email, name);
+      PostData(username, password, email, name, address, phone);
     } else {
       setData({
         ...data,
@@ -120,9 +146,9 @@ const SignUpScreen = ({ navigation }) => {
       });
     }
   };
-  const PostData = (username, password, email, name) => {
+  const PostData = (username, password, email, name, address, phone) => {
     setData({ ...data, registerMessage: null });
-    Axios.post("/register", { username, password, email, name })
+    Axios.post("/register", { username, password, email, name, address, phone })
       .then((response) => {
         setData({ ...data, registerMessage: null });
         if (response.data) {
@@ -138,7 +164,7 @@ const SignUpScreen = ({ navigation }) => {
   };
   return (
     <>
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <StatusBar backgroundColor={colors.green} barStyle="light-content" />
         <View style={styles.header}>
           <Text style={styles.text_header}>Welcome !</Text>
@@ -280,6 +306,75 @@ const SignUpScreen = ({ navigation }) => {
               ]}
               autoCapitalize="none"
               onEndEditing={(e) => handleEmailAddress(e.nativeEvent.text)}
+              onChangeText={(val) => handleEmailAddress(val)}
+            />
+            {data.check_textInputChange ? (
+              <Animatable.View animation="bounceIn">
+                <Feather name="check-circle" color="green" size={20} />
+              </Animatable.View>
+            ) : null}
+          </View>
+          {data.isValidEmail ? null : (
+            <Animatable.View animation="fadeInLeft" duration={500}>
+              <Text style={styles.errorMsg}>{data.errorMessageEmail}</Text>
+            </Animatable.View>
+          )}
+          <Text
+            style={[
+              styles.text_footer,
+              {
+                color: colors.black,
+                fontWeight: "bold",
+              },
+            ]}
+          >
+            Phone
+          </Text>
+          <View style={styles.action}>
+            <Feather name="phone" color={colors.green} size={20} />
+            <TextInput
+              placeholder="Your Phone Number"
+              keyboardType="number-pad"
+              autoCompleteType="tel"
+              style={[
+                styles.textInput,
+                {
+                  color: colors.black,
+                },
+              ]}
+              autoCapitalize="none"
+              onChangeText={(e) => handlePhoneChange(e)}
+            />
+          </View>
+          {data.isValidPhone ? null : (
+            <Animatable.View animation="fadeInLeft" duration={500}>
+              <Text style={styles.errorMsg}>{data.errorMessagePhone}</Text>
+            </Animatable.View>
+          )}
+          <Text
+            style={[
+              styles.text_footer,
+              {
+                color: colors.black,
+                fontWeight: "bold",
+              },
+            ]}
+          >
+            City
+          </Text>
+          <View style={styles.action}>
+            <Feather name="home" color={colors.green} size={20} />
+            <TextInput
+              placeholder="Your City"
+              autoCompleteType="street-address"
+              style={[
+                styles.textInput,
+                {
+                  color: colors.black,
+                },
+              ]}
+              autoCapitalize="none"
+              onChangeText={(e) => InputaddressChange(e)}
             />
             {data.check_textInputChange ? (
               <Animatable.View animation="bounceIn">
@@ -310,7 +405,9 @@ const SignUpScreen = ({ navigation }) => {
                   data.username,
                   data.password,
                   data.email,
-                  data.name
+                  data.name,
+                  data.address,
+                  data.phone
                 );
               }}
             >
@@ -352,64 +449,9 @@ const SignUpScreen = ({ navigation }) => {
                 Sign In
               </Text>
             </TouchableOpacity>
-            {/* 
-            <TouchableOpacity>
-              <Text style={{ color: colors.grey, marginVertical: 15 }}>
-                Use Alternatives
-              </Text>
-            </TouchableOpacity>
-            <ScrollView styles={styles.socialLogin} horizontal>
-              <TouchableOpacity
-                onPress={() => {
-                  console.log("Google Login");
-                }}
-                style={[
-                  styles.signIn,
-                  {
-                    backgroundColor: colors.white,
-                    paddingHorizontal: 20,
-                  },
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.textSign,
-                    {
-                      color: colors.red,
-                    },
-                  ]}
-                >
-                  <Icon name="google-plus" size={20} />
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  console.log("pressed");
-                }}
-                style={[
-                  styles.signIn,
-                  {
-                    backgroundColor: colors.white,
-                    paddingHorizontal: 20,
-                  },
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.textSign,
-                    {
-                      color: colors.red,
-                    },
-                  ]}
-                >
-                  <Icon name="facebook" size={20} />
-                </Text>
-              </TouchableOpacity>
-            </ScrollView>
-           */}
           </View>
         </Animatable.View>
-      </ScrollView>
+      </View>
     </>
   );
 };
@@ -418,24 +460,22 @@ export default SignUpScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: colors.green,
+    flex: 1,
   },
 
   header: {
     flex: 1,
     justifyContent: "flex-end",
     paddingHorizontal: 20,
-    paddingBottom: 130,
   },
   footer: {
-    flex: 1,
+    flex: 2,
     backgroundColor: "#fff",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingHorizontal: 20,
     paddingVertical: 30,
-    bottom: 0,
   },
   text_header: {
     color: "#fff",

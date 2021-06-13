@@ -14,7 +14,7 @@ const Stack = createStackNavigator();
 const ChatCategory = ({ user }) => {
   return user.isDoctor ? (
     <Stack.Navigator
-      initialRouteName="createchat"
+      initialRouteName="Messages"
       tabBarOptions={{
         activeTintColor: colors.black,
         inactiveTintColor: colors.greengrey,
@@ -28,7 +28,7 @@ const ChatCategory = ({ user }) => {
     >
       <Stack.Screen
         name="Messages"
-        children={<Messages isDoctor={user.isDoctor} />}
+        children={() => <Messages isDoctor={user.isDoctor} />}
       />
     </Stack.Navigator>
   ) : (

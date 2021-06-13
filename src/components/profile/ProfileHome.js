@@ -78,26 +78,42 @@ const ProfileHome = (props) => {
               },
             ]}
           >
-            <Title
-              style={{
-                color: colors.black,
-              }}
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Chat")}
+              style={[
+                styles.infoBox,
+                {
+                  color: colors.black,
+                },
+              ]}
             >
-              ₹140.50
-            </Title>
-            <Caption
-              style={{
-                color: colors.black,
-              }}
-            >
-              Wallet
-            </Caption>
+              <Title
+                style={{
+                  color: colors.black,
+                }}
+              >
+                {userData ? userData.MessageRooms.length : "loading.."}
+              </Title>
+              <Caption
+                style={{
+                  color: colors.black,
+                }}
+              >
+                Messages
+              </Caption>
+            </TouchableOpacity>
           </View>
           <View style={styles.infoBox}>
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate("appointmentlist", { appointments })
               }
+              style={[
+                styles.infoBox,
+                {
+                  color: colors.black,
+                },
+              ]}
             >
               <Title
                 style={{

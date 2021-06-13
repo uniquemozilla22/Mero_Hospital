@@ -24,7 +24,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Layout from "../../../../screens/Layout.js";
 import Greet from "./Boxheading";
 import { useNavigation } from "@react-navigation/native";
-import { IconButton } from "react-native-paper";
+import { IconButton, Avatar } from "react-native-paper";
 import colors from "../../../../assets/colors/colors";
 const UserMessages = (props) => {
   const [messages, setMessages] = useState(null);
@@ -87,11 +87,22 @@ const Renderer = ({ id, participant, name, navigation, isDoctor }) => {
       }}
     >
       <UserInfo>
-        {isDoctor ? null : (
+        {
           <UserImgWrapper>
-            <UserImg source={{ uri: participant?.DoctorId.image }}></UserImg>
+            {!isDoctor ? (
+              <UserImg source={{ uri: participant?.DoctorId.image }}></UserImg>
+            ) : (
+              <Avatar.Text
+                label={
+                  participant.name[0].toUpperCase() +
+                  "" +
+                  participant.name.split(" ")[1][0].toUpperCase()
+                }
+                size={40}
+              />
+            )}
           </UserImgWrapper>
-        )}
+        }
         <TextSection>
           <UserInfoText>
             <UserName>{participant?.name}</UserName>

@@ -117,7 +117,10 @@ const SignInScreen = ({ navigation, route }) => {
             AsyncStorage.setItem("@user_token", success.token);
             AsyncStorage.setItem("@user_data", JSON.stringify(success.result));
             AsyncStorage.setItem("@user_id", success.result._id);
-            navigation.navigate({ name: "application" });
+
+            success.result.isAdmin
+              ? navigation.navigate({ name: "admin" })
+              : navigation.navigate({ name: "application" });
           } catch (e) {
             console.log(e);
           }
@@ -288,61 +291,6 @@ const SignInScreen = ({ navigation, route }) => {
                 Sign Up
               </Text>
             </TouchableOpacity>
-
-            {/* <TouchableOpacity>
-              <Text style={{ color: colors.grey, marginVertical: 15 }}>
-                Use Alternatives
-              </Text>
-            </TouchableOpacity>
-            <ScrollView styles={styles.socialLogin} horizontal>
-              <TouchableOpacity
-                onPress={() => {
-                  console.log("pressed");
-                }}
-                style={[
-                  styles.signIn,
-                  {
-                    backgroundColor: colors.white,
-                    paddingHorizontal: 20,
-                  },
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.textSign,
-                    {
-                      color: colors.red,
-                    },
-                  ]}
-                >
-                  <Icon name="google-plus" size={20} />
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  console.log("pressed");
-                }}
-                style={[
-                  styles.signIn,
-                  {
-                    backgroundColor: colors.white,
-                    paddingHorizontal: 20,
-                  },
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.textSign,
-                    {
-                      color: colors.red,
-                    },
-                  ]}
-                >
-                  <Icon name="facebook" size={20} />
-                </Text>
-              </TouchableOpacity>
-            </ScrollView>
-           */}
           </View>
         </Animatable.View>
       </View>

@@ -100,6 +100,7 @@ const UserChat = ({ route }) => {
         //   setMessages((previousMessages) =>
         //     GiftedChat.append(previousMessages, messages)
         //   );
+
         // } else
         if (response.data === "error") {
           Alert.alert("Server Error", "Server Posting Error", [
