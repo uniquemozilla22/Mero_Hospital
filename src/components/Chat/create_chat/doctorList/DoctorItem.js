@@ -8,7 +8,7 @@ import colors from "../../../../assets/colors/colors";
 import { Modalize } from "react-native-modalize";
 import SingleProfile from "./singleprofile";
 
-const DoctorItem = ({ data, token }) => {
+const DoctorItem = ({ data, token, title }) => {
   const navigation = useNavigation();
 
   const modalizeRef = useRef(null);
@@ -19,7 +19,7 @@ const DoctorItem = ({ data, token }) => {
 
   const createChat = () => {
     axios_base
-      .post("/createroom" + token, { doctorId: data._id })
+      .post("/createroom" + token, { doctorId: data._id, title })
       .then((res) => {
         if (res.data === "success") {
           Alert.alert(

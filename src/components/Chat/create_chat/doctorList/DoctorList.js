@@ -84,7 +84,12 @@ const EditProfile = ({ route }) => {
           <Heading />
           {data ? (
             Object.keys(data).map((keys, value) => (
-              <DoctorItem key={keys} token={token} data={data[keys]} />
+              <DoctorItem
+                title={title}
+                key={keys}
+                token={token}
+                data={data[keys]}
+              />
             ))
           ) : (
             <ActivityIndicator size={"large"} />

@@ -5,7 +5,6 @@ import colors from "../../../assets/colors/colors";
 
 const Box = ({ category }) => {
   const { description, image, name, _id } = category;
-  console.log(image);
   return (
     <TouchableOpacity style={styles.container}>
       <ImagedCarouselCard

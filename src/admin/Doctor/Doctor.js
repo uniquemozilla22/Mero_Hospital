@@ -1,11 +1,25 @@
 import React from "react";
-import { Text } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
 const Doctor = () => {
+  const navigation = useNavigation();
+  const logout = () => {
+    AsyncStorage.removeItem("@user_data");
+    AsyncStorage.removeItem("@user_id");
+    AsyncStorage.removeItem("@user_token")
+      .then(() => {
+        navigation.navigate("login");
+      })
+      .catch((error) => {
+        navigation.navigate("login");
+      });
+  };
   return (
-    <>
-      <Text>This is the Doctor page</Text>
-    </>
+    <TouchableOpacity onPress={() => logout()} style={{ margin: 100 }}>
+      <Text>Logout</Text>
+    </TouchableOpacity>
   );
 };
 
