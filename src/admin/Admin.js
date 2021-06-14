@@ -82,7 +82,9 @@ const Admin = () => {
         />
         <BottomTab.Screen
           name={"Categories"}
-          component={Categories}
+          children={() => (
+            <Categories categoryData={categoryData ? categoryData : null} />
+          )}
           options={{
             tabBarIcon: ({ color = colors.red, size }) => (
               <MaterialIcons name="category" color={colors.red} size={size} />
@@ -91,7 +93,11 @@ const Admin = () => {
         />
         <BottomTab.Screen
           name={"Appointments"}
-          component={Appointment}
+          children={() => (
+            <Appointment
+              appointments={appointmentData ? appointmentData : null}
+            />
+          )}
           options={{
             tabBarIcon: ({ color = colors.red, size }) => (
               <Icons name="format-list-checks" color={colors.red} size={size} />
