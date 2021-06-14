@@ -14,28 +14,26 @@ import { Alert } from "react-native";
 const Admin = () => {
   const BottomTab = createBottomTabNavigator();
   const [appointmentData, setAppointmentData] = useState(null);
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
+    fetchToken();
     fetchAppointments();
-    console.log(appointmentData);
-  }, [appointmentData]);
+  }, [token]);
 
   const fetchToken = () => {
-    const tokenData = "";
     AsyncStorage.getItem("@user_token")
-      .then((token) => (tokenData = token))
+      .then((token) => setToken(token))
       .catch((err) =>
         Alert.alert("You are not Logged in", "Token Error :" + err, [
           { text: "OK", onPress: () => {} },
         ])
       );
-
-    return tokenData;
   };
 
   const fetchAppointments = () => {
     axios_base
-      .get("/appointmentsall" + fetchToken())
+      .get("/appointmentsall" + token)
       .then((response) => {
         setAppointmentData(response.data);
       })
@@ -54,7 +52,9 @@ const Admin = () => {
       >
         <BottomTab.Screen
           name={"Home"}
-          component={Home}
+          children={() => (
+            <Home appointments={appointmentData ? appointmentData : null} />
+          )}
           options={{
             tabBarIcon: ({ color = colors.red, size }) => (
               <Icons name="home-outline" color={colors.red} size={size} />
