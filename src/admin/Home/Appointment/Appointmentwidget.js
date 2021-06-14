@@ -4,11 +4,20 @@ import { ActivityIndicator } from "react-native-paper";
 import Box from "./Box";
 
 const Appointmentwidget = ({ appointments }) => {
-  console.log(appointments);
+  const todayappointment = appointments
+    ? Object.keys(appointments).filter(
+        (index) =>
+          new Date(appointments[index].date).getDate() === new Date().getDate()
+      ).length
+    : 0;
   return appointments ? (
     <View style={styles.container}>
-      <Box topic="Appointments" data={appointments.length} />
-      <Box topic="Chat Rooms" data={9} />
+      <Box
+        topic="Appointments"
+        data={appointments.length}
+        today={todayappointment}
+      />
+      <Box topic="Chat Rooms" data={9} today={0} />
     </View>
   ) : (
     <ActivityIndicator size="large" />

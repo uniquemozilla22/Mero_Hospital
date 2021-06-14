@@ -14,11 +14,13 @@ import { Alert } from "react-native";
 const Admin = () => {
   const BottomTab = createBottomTabNavigator();
   const [appointmentData, setAppointmentData] = useState(null);
+  const [categoryData, setCategoryData] = useState(null);
   const [token, setToken] = useState(null);
 
   useEffect(() => {
     fetchToken();
     fetchAppointments();
+    fetchCategories();
   }, [token]);
 
   const fetchToken = () => {
@@ -44,6 +46,19 @@ const Admin = () => {
       );
   };
 
+  const fetchCategories = () => {
+    axios_base
+      .get("/categories")
+      .then((res) => {
+        setCategoryData(res.data);
+      })
+      .catch((err) =>
+        Alert.alert("You are not Logged in", "Token Error :" + err, [
+          { text: "OK", onPress: () => {} },
+        ])
+      );
+  };
+
   return (
     <>
       <BottomTab.Navigator
@@ -53,7 +68,10 @@ const Admin = () => {
         <BottomTab.Screen
           name={"Home"}
           children={() => (
-            <Home appointments={appointmentData ? appointmentData : null} />
+            <Home
+              appointments={appointmentData ? appointmentData : null}
+              categoryData={categoryData ? categoryData : null}
+            />
           )}
           options={{
             tabBarIcon: ({ color = colors.red, size }) => (

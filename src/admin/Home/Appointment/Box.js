@@ -1,13 +1,18 @@
 import React from "react";
 import { Text, View, StyleSheet } from "react-native";
 import colors from "../../../assets/colors/colors";
+import Entypo from "react-native-vector-icons/Entypo";
 
-const Box = ({ topic, data }) => {
+const Box = ({ topic, data, today }) => {
   return (
     <View style={styles.container}>
-      <Text>{topic}</Text>
+      <Text style={styles.topic}>{topic}</Text>
       <View styles={styles.data}>
-        <Text>{data}</Text>
+        <Text style={styles.datatoday}>
+          <Entypo name={"plus"} color={colors.green} />
+          {today}
+        </Text>
+        <Text style={styles.datanumber}>{data}</Text>
       </View>
     </View>
   );
@@ -19,19 +24,31 @@ const styles = StyleSheet.create({
     padding: 10,
     marginHorizontal: 10,
     height: 100,
-    shadowColor: colors.grey,
+    shadowColor: colors.black,
     shadowOffset: {
-      width: 5,
+      width: 0,
       height: 5,
     },
-    shadowOpacity: 0.5,
-    borderRadius: 10,
+    shadowOpacity: 0.24,
+    borderRadius: 20,
     shadowRadius: 6,
+    justifyContent: "space-around",
   },
-
+  topic: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: colors.green,
+  },
   data: {
+    flex: 2,
+  },
+  datatoday: {
+    fontSize: 14,
+  },
+  datanumber: {
     alignSelf: "flex-end",
-    flex: 1,
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
 
