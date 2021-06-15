@@ -15,12 +15,14 @@ const Admin = () => {
   const BottomTab = createBottomTabNavigator();
   const [appointmentData, setAppointmentData] = useState(null);
   const [categoryData, setCategoryData] = useState(null);
+  const [doctorsData, setDoctorsData] = useState(null);
   const [token, setToken] = useState(null);
 
   useEffect(() => {
     fetchToken();
     fetchAppointments();
     fetchCategories();
+    fetchDoctors();
   }, [token]);
 
   const fetchToken = () => {
@@ -57,6 +59,19 @@ const Admin = () => {
           { text: "OK", onPress: () => {} },
         ])
       );
+  };
+
+  const fetchDoctors = () => {
+    axios_base
+      .get("/doctorall" + token)
+      .then((response) => {
+        setDoctorsData(response.data);
+      })
+      .catch((error) => {
+        Alert.alert("You are not Logged in", "Token Error :" + error, [
+          { text: "OK", onPress: () => {} },
+        ]);
+      });
   };
 
   return (
@@ -106,7 +121,7 @@ const Admin = () => {
         />
         <BottomTab.Screen
           name={"Doctors"}
-          component={Doctor}
+          children={() => <Doctor data={doctorsData} />}
           options={{
             tabBarIcon: ({ color = colors.red, size }) => (
               <Icons name="doctor" color={colors.red} size={size} />

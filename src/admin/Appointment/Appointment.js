@@ -30,7 +30,6 @@ const Appointment = ({ appointments }) => {
       <Modalize
         ref={modalizeRef}
         scrollViewProps={{ showsVerticalScrollIndicator: false }}
-        adjustToContentHeight
         closeOnOverlayTap
       >
         <SingleAppointment

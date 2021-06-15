@@ -6,26 +6,23 @@ import {
   RefreshControl,
 } from "react-native";
 import colors from "../assets/colors/colors";
-import { FAB } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-
-const wait = (timeout) => {
-  return new Promise((resolve) => setTimeout(resolve, timeout));
-};
 
 const Layout = (props) => {
   const navigation = useNavigation();
 
   const [refreshing, setRefreshing] = React.useState(false);
 
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => {
-      if(props.fetcherData)
-      {
-       props.fetcherData()
+      if (props.fetcherData) {
+        props.fetcherData();
       }
-      setRefreshing(false)
+      setRefreshing(false);
     });
   }, []);
 
@@ -55,6 +52,7 @@ const Layout = (props) => {
 
 const styles = StyleSheet.create({
   ViewingIndex: {
+    minHeight: 600,
     paddingTop: 10,
     paddingHorizontal: 10,
     backgroundColor: colors.white,
