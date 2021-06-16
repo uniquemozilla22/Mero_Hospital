@@ -9,7 +9,8 @@ import Doctor from "./Doctor/Doctor";
 import colors from "../assets/colors/colors";
 import axios_base from "../data/axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Alert } from "react-native";
+import { Alert, StyleSheet } from "react-native";
+import Profile from "./Profile/Screen";
 
 const Admin = () => {
   const BottomTab = createBottomTabNavigator();
@@ -78,7 +79,12 @@ const Admin = () => {
     <>
       <BottomTab.Navigator
         initialRouteName={"Home"}
-        tabBarOptions={{ activeTintColor: colors.green, showLabel: false }}
+        tabBarOptions={{
+          activeTintColor: colors.green,
+          showLabel: false,
+          inactiveTintColor: colors.greengrey,
+          style: styles.buttonoptions,
+        }}
       >
         <BottomTab.Screen
           name={"Home"}
@@ -89,8 +95,8 @@ const Admin = () => {
             />
           )}
           options={{
-            tabBarIcon: ({ color = colors.red, size }) => (
-              <Icons name="home-outline" color={colors.red} size={size} />
+            tabBarIcon: ({ color, size }) => (
+              <Icons name="home-outline" color={color} size={size} />
             ),
             activeTintColor: colors.green,
           }}
@@ -101,8 +107,8 @@ const Admin = () => {
             <Categories categoryData={categoryData ? categoryData : null} />
           )}
           options={{
-            tabBarIcon: ({ color = colors.red, size }) => (
-              <MaterialIcons name="category" color={colors.red} size={size} />
+            tabBarIcon: ({ color, size }) => (
+              <MaterialIcons name="category" color={color} size={size} />
             ),
           }}
         />
@@ -114,8 +120,8 @@ const Admin = () => {
             />
           )}
           options={{
-            tabBarIcon: ({ color = colors.red, size }) => (
-              <Icons name="format-list-checks" color={colors.red} size={size} />
+            tabBarIcon: ({ color, size }) => (
+              <Icons name="format-list-checks" color={color} size={size} />
             ),
           }}
         />
@@ -123,8 +129,17 @@ const Admin = () => {
           name={"Doctors"}
           children={() => <Doctor data={doctorsData} />}
           options={{
-            tabBarIcon: ({ color = colors.red, size }) => (
-              <Icons name="doctor" color={colors.red} size={size} />
+            tabBarIcon: ({ color, size }) => (
+              <Icons name="doctor" color={color} size={size} />
+            ),
+          }}
+        />
+        <BottomTab.Screen
+          name={"Profile"}
+          children={() => <Profile category={categoryData} />}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Icons name="account-outline" color={color} size={size} />
             ),
           }}
         />
@@ -132,5 +147,12 @@ const Admin = () => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  buttonoptions: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+});
 
 export default Admin;

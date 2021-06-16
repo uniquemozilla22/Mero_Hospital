@@ -15,10 +15,8 @@ import * as Animatable from "react-native-animatable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
 import colors from "../../assets/colors/colors";
-import Icon from "react-native-vector-icons/FontAwesome";
 import Axios from "../../data/axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { logo } from "../../assets/image/images";
 
 const SignInScreen = ({ navigation, route }) => {
   const [data, setData] = React.useState({
