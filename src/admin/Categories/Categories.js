@@ -5,9 +5,9 @@ import Layout from "../../screens/Layout";
 import Heading from "./Heading.js";
 import Items from "./Items.js";
 
-const Categories = ({ categoryData }) => {
+const Categories = ({ categoryData, fetchToken }) => {
   return categoryData ? (
-    <Layout>
+    <Layout fetcherData={() => fetchToken()}>
       <Heading topic={"Hospital Feilds"} />
       {Object.keys(categoryData).map((index) => (
         <Items key={categoryData[index]._id} data={categoryData[index]} />

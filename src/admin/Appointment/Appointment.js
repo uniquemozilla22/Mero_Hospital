@@ -8,7 +8,7 @@ import ListItem from "./ListItem.js";
 import Heading from "./Heading.js";
 import Layout from "../../screens/Layout.js";
 
-const Appointment = ({ appointments }) => {
+const Appointment = ({ appointments, fetchToken }) => {
   const [index, setIndex] = useState(null);
   const modalizeRef = useRef(null);
 
@@ -17,7 +17,7 @@ const Appointment = ({ appointments }) => {
     modalizeRef.current?.open();
   };
   return appointments ? (
-    <Layout>
+    <Layout fetcherData={() => fetchToken()}>
       <Heading topic={"Appointments Data"} />
       {Object.keys(appointments).map((index) => (
         <ListItem

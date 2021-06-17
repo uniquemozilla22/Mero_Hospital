@@ -36,7 +36,7 @@ const ProfileHome = (props) => {
             </View>
           </TouchableRipple>
 
-          <TouchableRipple onPress={() => {}}>
+          <TouchableRipple onPress={() => navigation.navigate("addcategory")}>
             <View style={styles.menuItem}>
               <MaterialIcons name="category" color={colors.green} size={25} />
               <Text style={styles.menuItemText}>Add Category</Text>

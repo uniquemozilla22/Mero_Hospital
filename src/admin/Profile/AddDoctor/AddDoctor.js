@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,20 +7,188 @@ import {
   Platform,
   StyleSheet,
   StatusBar,
+  Alert,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import IonIcons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
+import * as Animatable from "react-native-animatable";
 import colors from "../../../assets/colors/colors";
 import Layout from "../../../screens/Layout";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Heading from "./Heading";
 import { Picker } from "@react-native-picker/picker";
-import { ActivityIndicator } from "react-native-paper";
+import { ActivityIndicator, Avatar } from "react-native-paper";
+import axios_base from "../../../data/axios";
 
-const AddDoctor = ({ category }) => {
-  return (
-    <Layout>
+const AddDoctor = ({ category, token }) => {
+  const [data, setData] = useState({
+    categoryId: null,
+    name: null,
+    phone: null,
+    email: null,
+    city: null,
+    username: null,
+    password: null,
+    image: null,
+    degree: null,
+    experience: null,
+    secureTextEntry: true,
+    isValidEmail: false,
+    isValidPassword: false,
+    isValidUser: false,
+    isValidPhone: false,
+    erroruserMessage: null,
+    errorMessageEmail: null,
+    errorMessagePhone: null,
+    errorMessagePw: null,
+    submitMessage: null,
+  });
+
+  const PostData = (doctorData) => {
+    axios_base
+      .post("/adddoctor" + token, { doctorData })
+      .then((response) => {
+        if (response.data === "success") {
+          setData({
+            ...data,
+            submitMessage: "Doctor Has Been Added",
+          });
+        } else if (response.data === "error") {
+          setData({
+            ...data,
+            submitMessage: "There is a Server Error.",
+          });
+        }
+      })
+      .catch((error) => {
+        Alert.alert(
+          "No Internet Connection",
+          "There is no Internet Connection:" + error,
+          [
+            {
+              text: "Try Again",
+              onPress: () => {},
+            },
+            { text: "cancel", onPress: () => {} },
+          ]
+        );
+        setData({
+          ...data,
+          submitMessage: "There is a network Error.",
+        });
+      });
+  };
+
+  const handleSubmit = () => {
+    if (!data.name) {
+      setData({ ...data, submitMessage: "Please enter a correct name." });
+    } else if (!data.categoryId) {
+      setData({ ...data, submitMessage: "Please Select a Category." });
+    } else if (!data.city) {
+      setData({ ...data, submitMessage: "Please Enter a City." });
+    } else if (!data.username || !data.isValidUser) {
+      setData({ ...data, submitMessage: "Please Enter a Valid Username" });
+    } else if (!data.password || !data.isValidPassword) {
+      setData({ ...data, submitMessage: "Please Enter a Valid Password" });
+    } else if (!data.email || !data.isValidEmail) {
+      setData({ ...data, submitMessage: "Please Enter a Valid Email" });
+    } else if (!data.phone || !data.isValidPhone) {
+      setData({ ...data, submitMessage: "Please Enter a Valid Phone Number" });
+    } else if (!data.image) {
+      setData({ ...data, submitMessage: "Please Enter a Valid Image" });
+    } else if (!data.degree) {
+      setData({ ...data, submitMessage: "Please Enter Degree of the Doctor" });
+    } else if (!data.experience) {
+      setData({
+        ...data,
+        submitMessage: "Please Enter the Experience of the doctor",
+      });
+    } else {
+      PostData(data);
+    }
+  };
+
+  const handleValidUser = (val) => {
+    const hasSixCharacters = val.length >= 6 ? true : false;
+
+    if (hasSixCharacters) {
+      setData({
+        ...data,
+        username: val,
+        isValidUser: true,
+        erroruserMessage: null,
+      });
+    } else {
+      setData({
+        ...data,
+        isValidUser: false,
+        erroruserMessage: "Username must be of 6 characters",
+      });
+    }
+  };
+  const handlePhoneChange = (val) => {
+    if (val.length !== 10) {
+      setData({
+        ...data,
+        isValidPhone: false,
+        errorMessagePhone: "Not a Valid Phone Number",
+      });
+    } else {
+      setData({
+        ...data,
+        phone: val,
+        isValidPhone: true,
+        errorMessagePhone: null,
+      });
+    }
+  };
+
+  const handleEmailAddress = (val) => {
+    const validEmail =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+        val
+      )
+        ? true
+        : false;
+
+    if (validEmail) {
+      setData({
+        ...data,
+        isValidEmail: true,
+        errorMessageEmail: null,
+        email: val,
+      });
+    } else {
+      setData({
+        ...data,
+        isValidEmail: false,
+        errorMessageEmail: "The email Format is incorrect",
+      });
+    }
+  };
+
+  const handlePasswordChange = (val) => {
+    const hasNumber = /\d/.test(val) ? true : false;
+    const hasSixCharacters = val.length >= 6 ? true : false;
+    if (hasNumber && hasSixCharacters) {
+      setData({
+        ...data,
+        isValidPassword: true,
+        password: val,
+        errorMessagePw: null,
+      });
+    } else {
+      setData({
+        ...data,
+        isValidPassword: false,
+        errorMessagePw:
+          "Password must have at least 6 letters including numbers",
+      });
+    }
+  };
+  return token ? (
+    <Layout fetcherData={() => {}}>
       <Heading topic="Add Doctor" />
       <View style={styles.container}>
         <Text
@@ -45,13 +213,14 @@ const AddDoctor = ({ category }) => {
                   minHeight: 50,
                 },
               ]}
-              //   selectedValue={selectedLanguage}
-              //   onValueChange={(itemValue, itemIndex) =>
-              //     setSelectedLanguage(itemValue)
-              //   }
+              selectedValue={data.categoryId}
+              onValueChange={(itemValue, itemIndex) =>
+                setData({ ...data, categoryId: itemValue })
+              }
             >
               {Object.keys(category).map((index) => (
                 <Picker.Item
+                  key={category[index]._id}
                   label={category[index].name.toUpperCase()}
                   value={category[index]._id}
                 />
@@ -83,8 +252,7 @@ const AddDoctor = ({ category }) => {
               },
             ]}
             autoCapitalize="none"
-            //   onChangeText={(val) => textInputChange(val)}
-            //   onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
+            onChangeText={(val) => setData({ ...data, name: val })}
           />
         </View>
         <Text
@@ -111,9 +279,14 @@ const AddDoctor = ({ category }) => {
               },
             ]}
             autoCapitalize="none"
-            //   onChangeText={(e) => handlePhoneChange(e)}
+            onChangeText={(e) => handlePhoneChange(e)}
           />
         </View>
+        {data.isValidPhone ? null : (
+          <Animatable.View animation="fadeInLeft" duration={500}>
+            <Text style={styles.errorMsg}>{data.errorMessagePhone}</Text>
+          </Animatable.View>
+        )}
         <Text
           style={[
             styles.text_footer,
@@ -138,10 +311,14 @@ const AddDoctor = ({ category }) => {
               },
             ]}
             autoCapitalize="none"
-            // onEndEditing={(e) => handleEmailAddress(e.nativeEvent.text)}
-            // onChangeText={(val) => handleEmailAddress(val)}
+            onChangeText={(val) => handleEmailAddress(val)}
           />
         </View>
+        {data.isValidEmail ? null : (
+          <Animatable.View animation="fadeInLeft" duration={500}>
+            <Text style={styles.errorMsg}>{data.errorMessageEmail}</Text>
+          </Animatable.View>
+        )}
         <Text
           style={[
             styles.text_footer,
@@ -165,7 +342,7 @@ const AddDoctor = ({ category }) => {
               },
             ]}
             autoCapitalize="none"
-            // onChangeText={(e) => InputaddressChange(e)}
+            onChangeText={(e) => setData({ ...data, city: e })}
           />
         </View>
 
@@ -191,10 +368,14 @@ const AddDoctor = ({ category }) => {
               },
             ]}
             autoCapitalize="none"
-            // onChangeText={(val) => textInputChange(val)}
-            // onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
+            onChangeText={(val) => handleValidUser(val)}
           />
         </View>
+        {data.isValidUser ? null : (
+          <Animatable.View animation="fadeInLeft" duration={500}>
+            <Text style={styles.errorMsg}>{data.erroruserMessage}</Text>
+          </Animatable.View>
+        )}
         <Text
           style={[
             styles.text_footer,
@@ -212,7 +393,7 @@ const AddDoctor = ({ category }) => {
           <TextInput
             placeholder="Your Password"
             placeholderTextColor={colors.grey}
-            // secureTextEntry={data.secureTextEntry ? true : false}
+            secureTextEntry={data.secureTextEntry ? true : false}
             style={[
               styles.textInput,
               {
@@ -220,17 +401,29 @@ const AddDoctor = ({ category }) => {
               },
             ]}
             autoCapitalize="none"
-            //   onChangeText={(val) => handlePasswordChange(val)}
+            onChangeText={(val) => handlePasswordChange(val)}
           />
 
-          {/* // <TouchableOpacity onPress={updateSecureTextEntry}>
-            //   {data.secureTextEntry ? (
-            //     <Feather name="eye-off" color={colors.grey} size={20} />
-            //   ) : (
-            //     <Feather name="eye" color={colors.grey} size={20} />
-            //   )}
-            // </TouchableOpacity> */}
+          <TouchableOpacity
+            onPress={() =>
+              setData({
+                ...data,
+                secureTextEntry: !data.secureTextEntry,
+              })
+            }
+          >
+            {data.secureTextEntry ? (
+              <Feather name="eye-off" color={colors.grey} size={20} />
+            ) : (
+              <Feather name="eye" color={colors.grey} size={20} />
+            )}
+          </TouchableOpacity>
         </View>
+        {data.isValidPassword ? null : (
+          <Animatable.View animation="fadeInLeft" duration={500}>
+            <Text style={styles.errorMsg}>{data.errorMessagePw}</Text>
+          </Animatable.View>
+        )}
         <Text
           style={[
             styles.text_footer,
@@ -243,7 +436,11 @@ const AddDoctor = ({ category }) => {
           Image Address
         </Text>
         <View style={styles.action}>
-          <FontAwesome name="photo" color={colors.green} size={20} />
+          {data.image ? (
+            <Avatar.Image source={{ uri: data.image }} size={100} />
+          ) : (
+            <FontAwesome name="photo" color={colors.green} size={20} />
+          )}
           <TextInput
             placeholder="Image URL"
             style={[
@@ -253,7 +450,7 @@ const AddDoctor = ({ category }) => {
               },
             ]}
             autoCapitalize="none"
-            // onChangeText={(val) => inputChangeName(val)}
+            onChangeText={(val) => setData({ ...data, image: val })}
           />
         </View>
         <Text
@@ -278,7 +475,7 @@ const AddDoctor = ({ category }) => {
               },
             ]}
             autoCapitalize="none"
-            // onChangeText={(val) => inputChangeName(val)}
+            onChangeText={(val) => setData({ ...data, degree: val })}
           />
         </View>
         <Text
@@ -303,10 +500,15 @@ const AddDoctor = ({ category }) => {
               },
             ]}
             autoCapitalize="none"
-            // onChangeText={(val) => inputChangeName(val)}
+            onChangeText={(val) => setData({ ...data, experience: val })}
           />
         </View>
       </View>
+      {data.submitMessage ? (
+        <Animatable.View animation="fadeInLeft" duration={500}>
+          <Text style={styles.errorMsg}>{data.submitMessage}</Text>
+        </Animatable.View>
+      ) : null}
       <TouchableOpacity
         style={[
           styles.signIn,
@@ -315,16 +517,7 @@ const AddDoctor = ({ category }) => {
             marginVertical: 10,
           },
         ]}
-        onPress={() => {
-          registerHandle(
-            data.username,
-            data.password,
-            data.email,
-            data.name,
-            data.address,
-            data.phone
-          );
-        }}
+        onPress={() => handleSubmit()}
       >
         <Text
           style={[
@@ -338,6 +531,8 @@ const AddDoctor = ({ category }) => {
         </Text>
       </TouchableOpacity>
     </Layout>
+  ) : (
+    <ActivityIndicator size="large" />
   );
 };
 
@@ -346,6 +541,10 @@ export default AddDoctor;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  images: {
+    height: 100,
+    width: 100,
   },
   header: {
     flex: 1,
@@ -373,7 +572,7 @@ const styles = StyleSheet.create({
   },
   text_footer: {
     color: colors.white,
-    fontSize: 18,
+    fontSize: 14,
   },
   action: {
     flexDirection: "row",

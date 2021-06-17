@@ -8,7 +8,7 @@ import { Modalize } from "react-native-modalize";
 import SingleDoctor from "./SingleDoctor";
 import Heading from "./Heading";
 
-const Doctor = ({ data }) => {
+const Doctor = ({ data, fetchToken }) => {
   const [index, setIndex] = useState(null);
   const navigation = useNavigation();
   const modalizeRef = useRef(null);
@@ -17,19 +17,8 @@ const Doctor = ({ data }) => {
     setIndex(i);
     modalizeRef.current?.open();
   };
-  const logout = () => {
-    AsyncStorage.removeItem("@user_data");
-    AsyncStorage.removeItem("@user_id");
-    AsyncStorage.removeItem("@user_token")
-      .then(() => {
-        navigation.navigate("login");
-      })
-      .catch((error) => {
-        navigation.navigate("login");
-      });
-  };
   return data ? (
-    <Layout>
+    <Layout fetcherData={() => fetchToken()}>
       <Heading topic="Hospital Doctors" />
       <View style={{ minHeight: 650 }}>
         {Object.keys(data).map((index) => (

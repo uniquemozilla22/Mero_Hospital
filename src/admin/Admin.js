@@ -21,14 +21,16 @@ const Admin = () => {
 
   useEffect(() => {
     fetchToken();
-    fetchAppointments();
-    fetchCategories();
-    fetchDoctors();
   }, [token]);
 
   const fetchToken = () => {
     AsyncStorage.getItem("@user_token")
-      .then((token) => setToken(token))
+      .then((token) => {
+        setToken(token);
+        fetchAppointments(token);
+        fetchCategories();
+        fetchDoctors(token);
+      })
       .catch((err) =>
         Alert.alert("You are not Logged in", "Token Error :" + err, [
           { text: "OK", onPress: () => {} },
@@ -36,14 +38,14 @@ const Admin = () => {
       );
   };
 
-  const fetchAppointments = () => {
+  const fetchAppointments = (t) => {
     axios_base
-      .get("/appointmentsall" + token)
+      .get("/appointmentsall" + t)
       .then((response) => {
         setAppointmentData(response.data);
       })
       .catch((err) =>
-        Alert.alert("You are not Logged in", "Token Error :" + err, [
+        Alert.alert("You are ", "Token Error :" + err, [
           { text: "OK", onPress: () => {} },
         ])
       );
@@ -62,9 +64,9 @@ const Admin = () => {
       );
   };
 
-  const fetchDoctors = () => {
+  const fetchDoctors = (t) => {
     axios_base
-      .get("/doctorall" + token)
+      .get("/doctorall" + t)
       .then((response) => {
         setDoctorsData(response.data);
       })
@@ -92,6 +94,7 @@ const Admin = () => {
             <Home
               appointments={appointmentData ? appointmentData : null}
               categoryData={categoryData ? categoryData : null}
+              fetchToken={fetchToken}
             />
           )}
           options={{
@@ -104,7 +107,10 @@ const Admin = () => {
         <BottomTab.Screen
           name={"Categories"}
           children={() => (
-            <Categories categoryData={categoryData ? categoryData : null} />
+            <Categories
+              categoryData={categoryData ? categoryData : null}
+              fetchToken={fetchToken}
+            />
           )}
           options={{
             tabBarIcon: ({ color, size }) => (
@@ -117,6 +123,7 @@ const Admin = () => {
           children={() => (
             <Appointment
               appointments={appointmentData ? appointmentData : null}
+              fetchToken={fetchToken}
             />
           )}
           options={{
@@ -127,7 +134,7 @@ const Admin = () => {
         />
         <BottomTab.Screen
           name={"Doctors"}
-          children={() => <Doctor data={doctorsData} />}
+          children={() => <Doctor data={doctorsData} fetchToken={fetchToken} />}
           options={{
             tabBarIcon: ({ color, size }) => (
               <Icons name="doctor" color={color} size={size} />
@@ -136,7 +143,7 @@ const Admin = () => {
         />
         <BottomTab.Screen
           name={"Profile"}
-          children={() => <Profile category={categoryData} />}
+          children={() => <Profile category={categoryData} token={token} />}
           options={{
             tabBarIcon: ({ color, size }) => (
               <Icons name="account-outline" color={color} size={size} />

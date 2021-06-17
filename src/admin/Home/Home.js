@@ -7,7 +7,7 @@ import CategoriesWidget from "./Categories/Widget.js";
 import Heading from "./Heading.js";
 const Home = (props) => {
   return (
-    <Layout>
+    <Layout fetcherData={() => props.fetchToken()}>
       <AppointmentWidget {...props} />
       <Heading topic="Hospital Feilds" />
       <CategoriesWidget {...props} />
