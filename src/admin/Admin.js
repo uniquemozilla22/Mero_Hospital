@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React, { useEffect, useState } from "react";
-import Categories from "./Categories/Categories";
+import Categories from "./Categories/Screen";
 import Home from "./Home/Home";
 import Appointment from "./Appointment/Appointment";
 import Icons from "react-native-vector-icons/MaterialCommunityIcons";

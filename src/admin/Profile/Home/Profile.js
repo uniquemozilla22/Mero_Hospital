@@ -43,7 +43,7 @@ const ProfileHome = (props) => {
             </View>
           </TouchableRipple>
 
-          <TouchableRipple onPress={() => {}}>
+          <TouchableRipple onPress={() => navigation.navigate("Appointments")}>
             <View style={styles.menuItem}>
               <Icon
                 name="account-check-outline"
