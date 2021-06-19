@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axios_base = axios.create({
-  baseURL: "http://192.168.1.11:8000",
+  baseURL: "https://merohealthbackend.herokuapp.com/",
 });
 
 export default axios_base;

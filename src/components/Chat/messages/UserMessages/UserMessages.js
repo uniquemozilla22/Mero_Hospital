@@ -51,7 +51,7 @@ const UserMessages = (props) => {
   };
 
   return (
-    <Layout fetcherData={() => fetchData}>
+    <Layout fetcherData={() => fetchData()}>
       <Container>
         <Greet topic={"Your Chat Box"} />
         <View>

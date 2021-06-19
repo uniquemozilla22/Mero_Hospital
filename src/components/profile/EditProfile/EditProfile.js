@@ -35,10 +35,6 @@ const EditProfile = ({ route }) => {
   const [nameEdit, setNameEdit] = useState("");
   const [emailEdit, setEmailEdit] = useState("");
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   const nameInput = (val) => {
     setNameEdit(val);
     setData({ ...data, name: val, errorName: null, submittable: true });
@@ -124,14 +120,14 @@ const EditProfile = ({ route }) => {
                 "Data Posted Sucessfully",
                 response.data.success,
 
-                [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+                [{ text: "OK", onPress: () => {} }]
               );
             } else {
               Alert.alert(
                 "Internet Error Data not Posted",
                 response.data.error,
 
-                [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+                [{ text: "OK", onPress: () => {} }]
               );
             }
           })
@@ -140,7 +136,7 @@ const EditProfile = ({ route }) => {
               "Internet Error Data not Posted",
               error,
 
-              [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+              [{ text: "OK", onPress: () => {} }]
             );
           });
       })
@@ -148,7 +144,7 @@ const EditProfile = ({ route }) => {
         Alert.alert(
           "Please Login and Try again",
 
-          [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+          [{ text: "OK", onPress: () => {} }]
         );
       });
   };

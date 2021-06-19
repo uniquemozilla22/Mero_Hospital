@@ -14,7 +14,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <PaperProvider>
-        <Stack.Navigator initialRouteName={"admin"} headerMode={"none"}>
+        <Stack.Navigator initialRouteName={"login"} headerMode={"none"}>
           <Stack.Screen name="application" component={Tabs} />
           <Stack.Screen name="login" component={LoginScreen} />
           <Stack.Screen name="signup" component={SignUpScreen} />

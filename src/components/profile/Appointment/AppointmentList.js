@@ -5,7 +5,6 @@ import colors from "../../../assets/colors/colors";
 import AntDesign from "react-native-vector-icons/AntDesign";
 
 const AppointmentList = ({ data, Click, expired }) => {
-  console.log(typeof expired);
   return (
     <Card style={styles.cards}>
       <Card.Title

@@ -165,10 +165,6 @@ const SignUpScreen = ({ navigation }) => {
   return (
     <>
       <View style={styles.container}>
-        <StatusBar backgroundColor={colors.green} barStyle="light-content" />
-        <View style={styles.header}>
-          <Text style={styles.text_header}>Welcome !</Text>
-        </View>
         <Animatable.View
           animation="fadeInUpBig"
           style={[
@@ -466,11 +462,10 @@ const styles = StyleSheet.create({
 
   header: {
     flex: 1,
-    justifyContent: "flex-end",
+    justifyContent: "flex-start",
     paddingHorizontal: 20,
   },
   footer: {
-    flex: 2,
     backgroundColor: "#fff",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
