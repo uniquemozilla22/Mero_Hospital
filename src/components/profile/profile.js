@@ -1,13 +1,19 @@
 import React from "react";
 
 import { View, StyleSheet } from "react-native";
-import { Avatar, Title, Caption, Text } from "react-native-paper";
+import {
+  Avatar,
+  Title,
+  Caption,
+  Text,
+  ActivityIndicator,
+} from "react-native-paper";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import colors from "../../assets/colors/colors";
 
 const Profile = ({ data }) => {
-  return (
+  return data ? (
     <>
       <View style={styles.userInfoSection}>
         <View style={{ flexDirection: "row", marginTop: 15 }}>
@@ -21,9 +27,9 @@ const Profile = ({ data }) => {
           ) : (
             <Avatar.Text
               label={
-                data.name[0].toUpperCase() +
-                "" +
-                data.name.split(" ")[1][0].toUpperCase()
+                data.name[0].toUpperCase() + "" + data.name.split(" ")[1]
+                  ? data.name.split(" ")[1][0].toUpperCase()
+                  : ""
               }
               size={80}
             />
@@ -78,6 +84,8 @@ const Profile = ({ data }) => {
         </View>
       </View>
     </>
+  ) : (
+    <ActivityIndicator size="large" />
   );
 };
 

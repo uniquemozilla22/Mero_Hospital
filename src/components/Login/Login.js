@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   View,
   Text,
@@ -17,6 +17,9 @@ import Feather from "react-native-vector-icons/Feather";
 import colors from "../../assets/colors/colors";
 import Axios from "../../data/axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Modalize } from "react-native-modalize";
+import axios_base from "../../data/axios";
+import { ActivityIndicator } from "react-native-paper";
 
 const SignInScreen = ({ navigation, route }) => {
   const [data, setData] = React.useState({
@@ -32,6 +35,19 @@ const SignInScreen = ({ navigation, route }) => {
     userMessage: null,
     LoginMessage: null,
   });
+
+  const [forgetEmail, setForgetEmail] = React.useState({
+    email: "",
+    isValidEmail: false,
+    forgetEmailMessage: null,
+    loader: false,
+  });
+
+  const modalizeref = useRef(null);
+
+  const onOpen = () => {
+    modalizeref.current?.open();
+  };
 
   const textInputChange = (val) => {
     setData({ ...data, username: val });
@@ -59,6 +75,77 @@ const SignInScreen = ({ navigation, route }) => {
 
   const updateSecureTextEntry = () => {
     setData({ ...data, secureTextEntry: !data.secureTextEntry });
+  };
+
+  const handleForgotEmail = (val) => {
+    const validEmail =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+        val
+      )
+        ? true
+        : false;
+
+    if (validEmail) {
+      setForgetEmail({
+        ...data,
+        isValidEmail: true,
+        forgetEmailMessage: null,
+        email: val,
+      });
+    } else {
+      setForgetEmail({
+        ...data,
+        isValidEmail: false,
+        forgetEmailMessage: "The email Format is incorrect",
+      });
+    }
+  };
+
+  const sendEmailforgetpassword = () => {
+    setForgetEmail({ ...forgetEmail, loader: true });
+
+    if (forgetEmail.email.trimEnd() === "") {
+      setForgetEmail({
+        ...forgetEmail,
+        forgetEmailMessage: "The email is not entered",
+        loader: false,
+      });
+    } else {
+      axios_base
+        .post("/forgetpassword", { email: forgetEmail.email })
+        .then((response) => {
+          if (response.data === "nodatafound") {
+            setForgetEmail({ ...forgetEmail, loader: false });
+
+            Alert.alert(
+              "The Email has not been found ",
+              "The email you provided is not registered in the application",
+              [
+                {
+                  text: "OK",
+                  onPress: () =>
+                    setForgetEmail({ ...forgetEmail, loader: false }),
+                },
+              ]
+            );
+          } else if (response.data === "success") {
+            setForgetEmail({ ...forgetEmail, loader: false });
+
+            Alert.alert(
+              "Password OTP sent to your email ",
+              "The password has been sent to your email address please check your email address to continue.",
+              [{ text: "OK", onPress: () => {} }]
+            );
+          }
+        })
+        .catch((error) => {
+          Alert.alert(
+            "There has been some internet error in the application",
+            "Please check your internet connection.",
+            [{ text: "OK", onPress: () => {} }]
+          );
+        });
+    }
   };
 
   const handleValidUser = (val) => {
@@ -95,6 +182,7 @@ const SignInScreen = ({ navigation, route }) => {
 
   const checkUser = (username, password) => {
     setData({ ...data, LoginMessage: null });
+
     Axios.post("/login", { username, password })
       .then((response) => {
         let { error, success } = response.data;
@@ -230,7 +318,7 @@ const SignInScreen = ({ navigation, route }) => {
             </Animatable.View>
           )}
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => onOpen()}>
             <Text style={{ color: colors.grey, marginVertical: 15 }}>
               Forgot password?
             </Text>
@@ -292,6 +380,77 @@ const SignInScreen = ({ navigation, route }) => {
           </View>
         </Animatable.View>
       </View>
+      <Modalize ref={modalizeref} adjustToContentHeight={true}>
+        <Text
+          style={[
+            styles.text_footer,
+            {
+              color: colors.black,
+              margin: 15,
+              fontWeight: "bold",
+            },
+          ]}
+        >
+          Email
+        </Text>
+        <View
+          style={[
+            styles.action,
+            {
+              margin: 15,
+            },
+          ]}
+        >
+          <Feather name="lock" color={colors.black} size={20} />
+          <TextInput
+            placeholder="Your Registered Email"
+            placeholderTextColor={colors.grey}
+            style={[
+              styles.textInput,
+              {
+                color: colors.black,
+              },
+            ]}
+            autoCapitalize="none"
+            onChangeText={(val) => handleForgotEmail(val)}
+          />
+        </View>
+        {forgetEmail.forgetEmailMessage ? (
+          <Animatable.View animation="fadeInLeft" duration={500}>
+            <Text style={[styles.errorMsg, { marginHorizontal: 15 }]}>
+              {forgetEmail.forgetEmailMessage}
+            </Text>
+          </Animatable.View>
+        ) : null}
+        <TouchableOpacity
+          onPress={() => sendEmailforgetpassword()}
+          style={[
+            styles.signIn,
+            {
+              backgroundColor: colors.white,
+              borderColor: colors.green,
+              borderWidth: 1,
+              marginVertical: 15,
+              width: "100%",
+            },
+          ]}
+        >
+          {forgetEmail.loader ? (
+            <ActivityIndicator size={"small"} />
+          ) : (
+            <Text
+              style={[
+                styles.textSign,
+                {
+                  color: colors.green,
+                },
+              ]}
+            >
+              Send Password to E-mail
+            </Text>
+          )}
+        </TouchableOpacity>
+      </Modalize>
     </>
   );
 };

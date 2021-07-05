@@ -104,7 +104,12 @@ const UserChat = ({ route }) => {
         // } else
         if (response.data === "error") {
           Alert.alert("Server Error", "Server Posting Error", [
-            { text: "OK", onPress: () => {} },
+            {
+              text: "OK",
+              onPress: () => {
+                A;
+              },
+            },
           ]);
         }
       })
